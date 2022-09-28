@@ -64,3 +64,11 @@ func (usecase *userUsecase) PutData(data user.UserCore) (row int, err error) {
 	}
 	return row, err
 }
+
+func (usecase *userUsecase) DeleteUser(id int) (row int, err error) {
+	row, err = usecase.userData.DeleteUser(id)
+	if err != nil {
+		return -1, err
+	}
+	return row, err
+}
