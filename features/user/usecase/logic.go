@@ -28,7 +28,7 @@ func (usecase *userUsecase) PostData(data user.UserCore) (row int, err error) {
 
 func (usecase *userUsecase) PostLogin(data user.UserCore) (token string, err error) {
 	if data.Email == "" || data.Password == "" {
-		return "", errors.New("Data tidak boleh kosong")
+		return "", errors.New("Email or Password is incorrect")
 	}
 	token, err = usecase.userData.LoginUser(data)
 	if err != nil {
