@@ -25,3 +25,14 @@ func (usecase *userUsecase) PostData(data user.UserCore) (row int, err error) {
 	}
 	return row, err
 }
+
+func (usecase *userUsecase) PostLogin(data user.UserCore) (token string, err error) {
+	if data.Email == "" || data.Password == "" {
+		return "", errors.New("Data tidak boleh kosong")
+	}
+	token, err = usecase.userData.LoginUser(data)
+	if err != nil {
+		return "", err
+	}
+	return token, err
+}
