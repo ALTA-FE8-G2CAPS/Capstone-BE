@@ -19,6 +19,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	}
 	e.POST("/users", handler.RegisterUser, middlewares.JWTMiddleware())
 	e.POST("/login", handler.LoginUser)
+	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
 }
 
 func (handler *userDelivery) LoginUser(c echo.Context) error {
@@ -63,5 +64,18 @@ func (handler *userDelivery) RegisterUser(c echo.Context) error {
 	return c.JSON(200, map[string]interface{}{
 		"message": "register success",
 		"row":     row,
+	})
+}
+
+func (handler *userDelivery) GetAllUser(c echo.Context) error {
+	data, err := handler.userUsecase.GetAllUser()
+	if err != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(200, map[string]interface{}{
+		"message": "success",
+		"data":    FromCoreList(data),
 	})
 }
