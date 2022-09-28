@@ -17,7 +17,7 @@ func New(data user.DataInterface) user.UsecaseInterface {
 
 func (usecase *userUsecase) PostData(data user.UserCore) (row int, err error) {
 	if data.Nama_User == "" || data.Email == "" || data.Password == "" || data.Address_user == "" {
-		return -1, errors.New("Data tidak boleh kosong")
+		return -1, errors.New("data tidak boleh kosong")
 	}
 	row, err = usecase.userData.InsertData(data)
 	if err != nil {
