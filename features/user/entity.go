@@ -11,8 +11,13 @@ type UserCore struct {
 	Address_user string
 	Foto_user    string
 	User_owner   string
+	Foto_owner   Owner
 	Created_At   time.Time
 	Updated_At   time.Time
+}
+
+type Owner struct {
+	Foto_owner string
 }
 
 type UsecaseInterface interface {
@@ -22,6 +27,7 @@ type UsecaseInterface interface {
 	PostData(data UserCore) (row int, err error)
 	PutData(data UserCore) (row int, err error)
 	DeleteUser(id int) (row int, err error)
+	PostOwner(data Owner) (row int, err error)
 }
 
 type DataInterface interface {
@@ -31,4 +37,5 @@ type DataInterface interface {
 	LoginUser(data UserCore) (token string, err error)
 	UpdateUser(data UserCore) (row int, err error)
 	DeleteUser(id int) (row int, err error)
+	InsertOwner(data Owner) (row int, err error)
 }
