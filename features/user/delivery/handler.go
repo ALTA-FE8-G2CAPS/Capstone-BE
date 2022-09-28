@@ -23,6 +23,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
 	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
 	e.PUT("/users/:id", handler.UpdateUser, middlewares.JWTMiddleware())
+	e.DELETE("/users/:id", handler.DeleteUser, middlewares.JWTMiddleware())
 }
 
 func (handler *userDelivery) LoginUser(c echo.Context) error {
@@ -134,6 +135,28 @@ func (handler *userDelivery) UpdateUser(c echo.Context) error {
 
 	return c.JSON(200, map[string]interface{}{
 		"message": "update success",
-		"row":     row,
+	})
+}
+
+func (handler *userDelivery) DeleteUser(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, errConv.Error())
+	}
+
+	row, err := handler.userUsecase.DeleteUser(idConv)
+	if err != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": "delete error",
+		})
+	}
+
+	if row != 1 {
+		return c.JSON(400, map[string]interface{}{"message": "failed to delete"})
+	}
+
+	return c.JSON(200, map[string]interface{}{
+		"message": "delete success",
 	})
 }
