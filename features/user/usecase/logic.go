@@ -28,7 +28,7 @@ func (usecase *userUsecase) PostData(data user.UserCore) (row int, err error) {
 
 func (usecase *userUsecase) PostLogin(data user.UserCore) (token string, err error) {
 	if data.Email == "" || data.Password == "" {
-		return "", errors.New("Email or Password is incorrect")
+		return "", errors.New("email or password is incorrect")
 	}
 	token, err = usecase.userData.LoginUser(data)
 	if err != nil {
@@ -50,7 +50,7 @@ func (usecase *userUsecase) GetUserById(id int) (data user.UserCore, err error) 
 	if err != nil {
 		return user.UserCore{}, err
 	} else if data.ID == 0 {
-		return user.UserCore{}, errors.New("User not found")
+		return user.UserCore{}, errors.New("user not found")
 	} else { // data.ID != 0
 		return data, err
 	}
@@ -67,6 +67,14 @@ func (usecase *userUsecase) PutData(data user.UserCore) (row int, err error) {
 
 func (usecase *userUsecase) DeleteUser(id int) (row int, err error) {
 	row, err = usecase.userData.DeleteUser(id)
+	if err != nil {
+		return -1, err
+	}
+	return row, err
+}
+
+func (usecase *userUsecase) PostOwner(data user.Owner) (row int, err error) {
+	row, err = usecase.userData.InsertOwner(data)
 	if err != nil {
 		return -1, err
 	}
