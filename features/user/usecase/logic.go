@@ -36,3 +36,11 @@ func (usecase *userUsecase) PostLogin(data user.UserCore) (token string, err err
 	}
 	return token, err
 }
+
+func (usecase *userUsecase) GetAllUser() (data []user.UserCore, err error) {
+	data, err = usecase.userData.SelectAllUser()
+	if err != nil {
+		return nil, err
+	}
+	return data, err
+}
