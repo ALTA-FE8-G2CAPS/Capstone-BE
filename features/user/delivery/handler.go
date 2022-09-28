@@ -22,6 +22,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	e.POST("/login", handler.LoginUser)
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
 	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
+	e.PUT("/users/:id", handler.UpdateUser, middlewares.JWTMiddleware())
 }
 
 func (handler *userDelivery) LoginUser(c echo.Context) error {
@@ -99,5 +100,40 @@ func (handler *userDelivery) GetUserById(c echo.Context) error {
 	return c.JSON(200, map[string]interface{}{
 		"message": "success",
 		"data":    FromCore(data),
+	})
+}
+
+func (handler *userDelivery) UpdateUser(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": errConv.Error(),
+		})
+	}
+	var data UserRequest
+	errBind := c.Bind(&data)
+
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to update"))
+	}
+
+	updateCore := ToCore(data)
+	updateCore.ID = uint(idConv)
+
+	row, err := handler.userUsecase.PutData(updateCore)
+	if err != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": "update error",
+		})
+	}
+
+	if row != 1 {
+		return c.JSON(400, map[string]interface{}{"message": "failed to update"})
+	}
+
+	return c.JSON(200, map[string]interface{}{
+		"message": "update success",
+		"row":     row,
 	})
 }
