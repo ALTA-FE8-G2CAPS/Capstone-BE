@@ -5,6 +5,7 @@ import (
 	"capstone-project/middlewares"
 	"capstone-project/utils/helper"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -20,6 +21,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	e.POST("/users", handler.RegisterUser, middlewares.JWTMiddleware())
 	e.POST("/login", handler.LoginUser)
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
+	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
 }
 
 func (handler *userDelivery) LoginUser(c echo.Context) error {
@@ -77,5 +79,25 @@ func (handler *userDelivery) GetAllUser(c echo.Context) error {
 	return c.JSON(200, map[string]interface{}{
 		"message": "success",
 		"data":    FromCoreList(data),
+	})
+}
+
+func (handler *userDelivery) GetUserById(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": errConv.Error(),
+		})
+	}
+	data, err := handler.userUsecase.GetUserById(idConv)
+	if err != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(200, map[string]interface{}{
+		"message": "success",
+		"data":    FromCore(data),
 	})
 }
