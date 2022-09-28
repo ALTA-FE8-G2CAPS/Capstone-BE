@@ -55,3 +55,12 @@ func (usecase *userUsecase) GetUserById(id int) (data user.UserCore, err error) 
 		return data, err
 	}
 }
+
+func (usecase *userUsecase) PutData(data user.UserCore) (row int, err error) {
+
+	row, err = usecase.userData.UpdateUser(data)
+	if err != nil {
+		return -1, err
+	}
+	return row, err
+}
