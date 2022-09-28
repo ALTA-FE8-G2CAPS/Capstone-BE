@@ -51,3 +51,24 @@ func (repo *dataUser) LoginUser(data user.UserCore) (token string, err error) {
 	}
 	return token, err
 }
+
+func (repo *dataUser) InsertData(data user.UserCore) (row int, err error) {
+	var user User
+	hash, err := HashPassword(data.Password)
+	if err != nil {
+		return -1, err
+	}
+	user.Nama_User = data.Nama_User
+	user.Email = data.Email
+	user.Password = hash
+	user.Role = data.Role
+	user.Address_user = data.Address_user
+	user.Foto_user = data.Foto_user
+	user.User_owner = data.User_owner
+
+	tx := repo.db.Create(&user)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
