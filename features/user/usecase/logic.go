@@ -44,3 +44,14 @@ func (usecase *userUsecase) GetAllUser() (data []user.UserCore, err error) {
 	}
 	return data, err
 }
+
+func (usecase *userUsecase) GetUserById(id int) (data user.UserCore, err error) {
+	data, err = usecase.userData.SelectUserById(id)
+	if err != nil {
+		return user.UserCore{}, err
+	} else if data.ID == 0 {
+		return user.UserCore{}, errors.New("User not found")
+	} else { // data.ID != 0
+		return data, err
+	}
+}
