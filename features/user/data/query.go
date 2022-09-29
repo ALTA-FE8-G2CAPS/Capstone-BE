@@ -72,3 +72,14 @@ func (repo *dataUser) InsertData(data user.UserCore) (row int, err error) {
 	}
 	return int(tx.RowsAffected), nil
 }
+
+func (repo *dataUser) SelectAllUser() ([]user.UserCore, error) {
+	var users []User
+	var userCore []user.UserCore
+	tx := repo.db.Find(&users)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	userCore = toCoreList(users)
+	return userCore, nil
+}
