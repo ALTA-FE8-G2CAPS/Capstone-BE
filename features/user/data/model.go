@@ -8,19 +8,19 @@ import (
 
 type User struct {
 	gorm.Model
-	Nama_User    string `json:"nama_user" form:"nama_user"`
-	Email        string `json:"email" form:"email"`
-	Password     string `json:"password" form:"password"`
-	Role         string `json:"role" form:"role"`
-	Address_user string `json:"address_user" form:"address_user"`
+	Nama_User    string
+	Email        string
+	Password     string
+	Role         string
+	Address_user string
 	Foto_user    string
-	User_owner   string `json:"user_owner" form:"user_owner"`
-	Foto_owner   Owner
+	User_owner   string
+	Foto_owner   Owner `gorm:"foreignKey:UserID;references:UserID"`
 	Venues       []Venue
 }
 
 type Owner struct {
-	UserID     uint
+	UserID     uint `gorm:"primarykey"`
 	Foto_owner string
 }
 
