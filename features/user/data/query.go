@@ -137,3 +137,14 @@ func (repo *dataUser) UpdateUser(data user.UserCore) (int, error) {
 	}
 	return int(tx.RowsAffected), nil
 }
+
+func (repo *dataUser) InsertOwner(data user.Owner) (row int, err error) {
+	var owner Owner
+	owner.Foto_owner = data.Foto_owner
+
+	tx := repo.db.Create(&owner)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
