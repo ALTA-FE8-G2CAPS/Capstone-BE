@@ -5,18 +5,18 @@ import (
 )
 
 type UserRequest struct {
-	Nama_User    string `json:"nama_user" form:"nama_user"`
+	Name_User    string `json:"name_user" form:"name_user"`
 	Email        string `json:"email" form:"email"`
 	Password     string `json:"password" form:"password"`
 	Role         string `json:"role" form:"role"`
 	Address_user string `json:"address_user" form:"address_user"`
 	Foto_user    string `json:"foto_user" form:"foto_user"`
-	User_owner   string `json:"user_owner" form:"user_owner"`
+	User_owner   bool   `json:"user_owner" form:"user_owner"`
 }
 
 func ToCore(data UserRequest) user.UserCore {
 	return user.UserCore{
-		Nama_User:    data.Nama_User,
+		Name_User:    data.Name_User,
 		Email:        data.Email,
 		Password:     data.Password,
 		Role:         data.Role,

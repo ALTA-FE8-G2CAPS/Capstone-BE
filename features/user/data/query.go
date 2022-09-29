@@ -31,9 +31,9 @@ func CheckPasswordHash(password, hash string) bool {
 
 func (repo *dataUser) LoginUser(data user.UserCore) (token string, err error) {
 	var user User
-	tx := repo.db.Where("email = ? AND password = ?", data.Email, data.Password).First(&user)
+	tx := repo.db.Where("email = ?", data.Email).First(&user)
 	result := CheckPasswordHash(data.Password, user.Password)
-	if result == false {
+	if !result {
 		return "", errors.New("password is incorrect")
 	}
 
@@ -42,10 +42,10 @@ func (repo *dataUser) LoginUser(data user.UserCore) (token string, err error) {
 	}
 
 	if tx.RowsAffected == 0 {
-		return "", errors.New("acoount not found")
+		return "", errors.New("acount not found")
 	}
 
-	token, err = middlewares.CreateToken(int(user.ID), user.Role, user.Nama_User)
+	token, err = middlewares.CreateToken(int(user.ID), user.Role, user.Name_User, user.User_owner)
 	if err != nil {
 		return "", err
 	}
@@ -58,7 +58,7 @@ func (repo *dataUser) InsertData(data user.UserCore) (row int, err error) {
 	if err != nil {
 		return -1, err
 	}
-	user.Nama_User = data.Nama_User
+	user.Name_User = data.Name_User
 	user.Email = data.Email
 	user.Password = hash
 	user.Role = data.Role
@@ -75,12 +75,11 @@ func (repo *dataUser) InsertData(data user.UserCore) (row int, err error) {
 
 func (repo *dataUser) SelectAllUser() ([]user.UserCore, error) {
 	var users []User
-	var userCore []user.UserCore
 	tx := repo.db.Find(&users)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	userCore = toCoreList(users)
+	userCore := toCoreList(users)
 	return userCore, nil
 }
 

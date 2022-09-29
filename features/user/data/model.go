@@ -8,15 +8,15 @@ import (
 
 type User struct {
 	gorm.Model
-	Nama_User    string
-	Email        string
+	Name_User    string
+	Email        string `gorm:"unique"`
 	Password     string
-	Role         string
+	Role         string `gorm:"default:user"`
 	Address_user string
 	Foto_user    string
-	User_owner   string
-	Foto_owner   Owner `gorm:"foreignKey:UserID;references:UserID"`
-	Venues       []Venue
+	User_owner   bool  `gorm:"default:false"`
+	Owner        Owner `gorm:"foreignKey:UserID"`
+	// Venues       []Venue
 }
 
 type Owner struct {
@@ -24,50 +24,50 @@ type Owner struct {
 	Foto_owner string
 }
 
-type Venue struct {
-	gorm.Model
-	Nama_venue        string
-	Address_venue     string
-	UserID            uint
-	Description_venue string
-	Latitude          string
-	Longitude         string
-	User              User
-	Fields            []Field
-	Reviews           []Review
-	FotoVenues        []FotoVenue
-}
+// type Venue struct {
+// 	gorm.Model
+// 	Nama_venue        string
+// 	Address_venue     string
+// 	UserID            uint
+// 	Description_venue string
+// 	Latitude          string
+// 	Longitude         string
+// 	User              User
+// 	Fields            []Field
+// 	Reviews           []Review
+// 	FotoVenues        []FotoVenue
+// }
 
-type FotoVenue struct {
-	gorm.Model
-	Foto_venue string
-}
+// type FotoVenue struct {
+// 	gorm.Model
+// 	Foto_venue string
+// }
 
-type Field struct {
-	gorm.Model
-	VenueID    uint
-	Category   string
-	Price      int
-	FotoFields []FotoField
-}
+// type Field struct {
+// 	gorm.Model
+// 	VenueID    uint
+// 	Category   string
+// 	Price      int
+// 	FotoFields []FotoField
+// }
 
-type FotoField struct {
-	gorm.Model
-	Foto_field string
-}
+// type FotoField struct {
+// 	gorm.Model
+// 	Foto_field string
+// }
 
-type Review struct {
-	gorm.Model
-	VenueID     uint
-	UserID      uint
-	Rate        int
-	Feedback    string
-	Foto_review string
-}
+// type Review struct {
+// 	gorm.Model
+// 	VenueID     uint
+// 	UserID      uint
+// 	Rate        int
+// 	Feedback    string
+// 	Foto_review string
+// }
 
 func fromCore(data user.UserCore) User {
 	return User{
-		Nama_User:    data.Nama_User,
+		Name_User:    data.Name_User,
 		Email:        data.Email,
 		Password:     data.Password,
 		Role:         data.Role,
@@ -79,7 +79,8 @@ func fromCore(data user.UserCore) User {
 
 func (data *User) toCore() user.UserCore {
 	return user.UserCore{
-		Nama_User:    data.Nama_User,
+		ID:           data.ID,
+		Name_User:    data.Name_User,
 		Email:        data.Email,
 		Password:     data.Password,
 		Role:         data.Role,

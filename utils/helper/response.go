@@ -28,14 +28,14 @@ func Success_DataResp(msg string, data interface{}) map[string]interface{} {
 
 }
 
-func Success_Login(msg string, data interface{}, data2 interface{}, data3 interface{}) map[string]interface{} {
+func Success_Login(msg string, data, data2, data3, data4 interface{}) map[string]interface{} {
 	return map[string]interface{}{
-		"status":  "Success",
-		"message": msg,
-		"token":   data,
-		"role":    data2,
-		"user":    data3,
-		"code":    http.StatusOK,
+		"message":    msg,
+		"token":      data,
+		"role":       data2,
+		"user":       data3,
+		"user_owner": data4,
+		"code":       http.StatusOK,
 	}
 
 }

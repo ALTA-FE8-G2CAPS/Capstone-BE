@@ -16,7 +16,7 @@ func New(data user.DataInterface) user.UsecaseInterface {
 }
 
 func (usecase *userUsecase) PostData(data user.UserCore) (row int, err error) {
-	if data.Nama_User == "" || data.Email == "" || data.Password == "" || data.Address_user == "" {
+	if data.Name_User == "" || data.Email == "" || data.Password == "" || data.Address_user == "" {
 		return -1, errors.New("data tidak boleh kosong")
 	}
 	row, err = usecase.userData.InsertData(data)
@@ -56,14 +56,14 @@ func (usecase *userUsecase) GetUserById(id int) (data user.UserCore, err error) 
 	}
 }
 
-func (usecase *userUsecase) PutData(data user.UserCore) (row int, err error) {
+// func (usecase *userUsecase) PutData(data user.UserCore) (row int, err error) {
 
-	row, err = usecase.userData.UpdateUser(data)
-	if err != nil {
-		return -1, err
-	}
-	return row, err
-}
+// 	row, err = usecase.userData.UpdateUser(data)
+// 	if err != nil {
+// 		return -1, err
+// 	}
+// 	return row, err
+// }
 
 func (usecase *userUsecase) DeleteUser(id int) (row int, err error) {
 	row, err = usecase.userData.DeleteUser(id)
@@ -73,10 +73,10 @@ func (usecase *userUsecase) DeleteUser(id int) (row int, err error) {
 	return row, err
 }
 
-func (usecase *userUsecase) PostOwner(data user.Owner) (row int, err error) {
-	row, err = usecase.userData.InsertOwner(data)
-	if err != nil {
-		return -1, err
-	}
-	return row, err
-}
+// func (usecase *userUsecase) PostOwner(data user.Owner) (row int, err error) {
+// 	row, err = usecase.userData.InsertOwner(data)
+// 	if err != nil {
+// 		return -1, err
+// 	}
+// 	return row, err
+// }
