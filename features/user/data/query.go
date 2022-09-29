@@ -94,3 +94,13 @@ func (repo *dataUser) SelectUserById(id int) (user.UserCore, error) {
 	userData := userList.toCore()
 	return userData, nil
 }
+
+func (repo *dataUser) DeleteUser(id int) (row int, err error) {
+	var user User
+	user.ID = uint(id)
+	tx := repo.db.Delete(&user)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
