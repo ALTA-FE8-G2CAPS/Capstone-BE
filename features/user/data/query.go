@@ -103,3 +103,37 @@ func (repo *dataUser) DeleteUser(id int) (row int, err error) {
 	}
 	return int(tx.RowsAffected), nil
 }
+
+func (repo *dataUser) UpdateUser(data user.UserCore) (int, error) {
+	var userUpdate User
+	txDataOld := repo.db.First(&userUpdate, data.ID)
+
+	if txDataOld.Error != nil {
+		return -1, txDataOld.Error
+	}
+
+	if data.Name_User != "" {
+		userUpdate.Name_User = data.Name_User
+	}
+
+	if data.Password != "" {
+		hash_pass, errHash := HashPassword(data.Password)
+		if errHash != nil {
+			return -1, errHash
+		}
+		userUpdate.Password = hash_pass
+	}
+
+	if data.Foto_user != "" {
+		userUpdate.Foto_user = data.Foto_user
+	}
+
+	if data.Address_user != "" {
+		userUpdate.Address_user = data.Address_user
+	}
+	tx := repo.db.Save(&userUpdate)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
