@@ -20,7 +20,7 @@ type User struct {
 }
 
 type Owner struct {
-	gorm.Model
+	UserID     uint
 	Foto_owner string
 }
 
