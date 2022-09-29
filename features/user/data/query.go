@@ -83,3 +83,14 @@ func (repo *dataUser) SelectAllUser() ([]user.UserCore, error) {
 	userCore = toCoreList(users)
 	return userCore, nil
 }
+
+func (repo *dataUser) SelectUserById(id int) (user.UserCore, error) {
+	var userList User
+	userList.ID = uint(id)
+	tx := repo.db.Where("id = ?", id).First(&userList)
+	if tx.Error != nil {
+		return user.UserCore{}, tx.Error
+	}
+	userData := userList.toCore()
+	return userData, nil
+}
