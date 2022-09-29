@@ -26,7 +26,7 @@ type UsecaseInterface interface {
 	GetUserById(id int) (data UserCore, err error)
 	PostLogin(data UserCore) (token string, err error)
 	PostData(data UserCore) (row int, err error)
-	// PutData(data UserCore) (row int, err error)
+	PutData(data UserCore) (row int, err error)
 	DeleteUser(id int) (row int, err error)
 	// PostOwner(data Owner) (row int, err error)
 }
@@ -36,7 +36,7 @@ type DataInterface interface {
 	SelectUserById(id int) (data UserCore, err error)
 	InsertData(data UserCore) (row int, err error)
 	LoginUser(data UserCore) (token string, err error)
-	// UpdateUser(data UserCore) (row int, err error)
+	UpdateUser(data UserCore) (row int, err error)
 	DeleteUser(id int) (row int, err error)
 	// InsertOwner(data Owner) (row int, err error)
 }
