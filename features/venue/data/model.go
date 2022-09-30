@@ -58,7 +58,7 @@ func (dataVenue *Venue) toCore() venue.VenueCore {
 		Name_venue:        dataVenue.Name_venue,
 		Address_venue:     dataVenue.Address_venue,
 		Description_venue: dataVenue.Description_venue,
-		Nama_user:         dataVenue.User.Name_User,
+		Name_user:         dataVenue.User.Name_User,
 		Latitude:          dataVenue.Latitude,
 		Longitude:         dataVenue.Longitude,
 	}

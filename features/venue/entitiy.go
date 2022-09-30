@@ -6,7 +6,7 @@ type VenueCore struct {
 	Address_venue     string
 	Description_venue string
 	UserID            uint
-	Nama_user         string
+	Name_user         string
 	Latitude          float64
 	Longitude         float64
 }

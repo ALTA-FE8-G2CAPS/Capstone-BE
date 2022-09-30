@@ -10,12 +10,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type VenueDelivery struct {
+type venueDelivery struct {
 	venueUsecase venue.UsecaseInterface
 }
 
 func New(e *echo.Echo, usecase venue.UsecaseInterface) {
-	handler := &VenueDelivery{
+	handler := &venueDelivery{
 		venueUsecase: usecase,
 	}
 
@@ -23,7 +23,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 
 }
 
-func (delivery *VenueDelivery) PostVenue(c echo.Context) error {
+func (delivery *venueDelivery) PostVenue(c echo.Context) error {
 	userId := middlewares.ExtractToken(c)
 	fmt.Println(userId)
 	if userId == -1 {
@@ -31,6 +31,7 @@ func (delivery *VenueDelivery) PostVenue(c echo.Context) error {
 	}
 	var venue_RequestData VenueRequest
 	venue_RequestData.UserID = uint(userId)
+	fmt.Println(venue_RequestData.Name_venue)
 	errBind := c.Bind(&venue_RequestData)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail bind data"))
