@@ -14,6 +14,18 @@ type UserResponse struct {
 	User_owner   bool   `json:"user_owner" form:"user_owner"`
 }
 
+type OwnerResponse struct {
+	UserID     uint   `json:"user_id" form:"user_id"`
+	Foto_owner string `json:"foto_owner" form:"foto_owner"`
+}
+
+func FromCoreOwner(data user.Owner) OwnerResponse {
+	return OwnerResponse{
+		UserID:     data.UserID,
+		Foto_owner: data.Foto_owner,
+	}
+}
+
 func FromCore(data user.UserCore) UserResponse {
 	return UserResponse{
 		ID:           data.ID,
