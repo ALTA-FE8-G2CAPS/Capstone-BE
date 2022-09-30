@@ -39,3 +39,8 @@ func (usecase *venueUsecase) GetVenueById(id int) (venue.VenueCore, error) {
 	}
 	return result, nil
 }
+
+func (usecase *venueUsecase) PutData(data venue.VenueCore) (int, error) {
+	row, err := usecase.venueData.UpdateVenue(data)
+	return row, err
+}
