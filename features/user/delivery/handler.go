@@ -23,8 +23,8 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	e.POST("/users/owner", handler.RegisterOwner)
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
 	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
-	e.PUT("/users/:id", handler.UpdateUser, middlewares.JWTMiddleware())
-	e.DELETE("/users/:id", handler.DeleteUser, middlewares.JWTMiddleware())
+	e.PUT("/users", handler.UpdateUser, middlewares.JWTMiddleware())
+	e.DELETE("/users", handler.DeleteUser, middlewares.JWTMiddleware())
 }
 
 func (handler *userDelivery) LoginUser(c echo.Context) error {
@@ -107,12 +107,9 @@ func (handler *userDelivery) GetUserById(c echo.Context) error {
 }
 
 func (handler *userDelivery) UpdateUser(c echo.Context) error {
-	id := c.Param("id")
-	idConv, errConv := strconv.Atoi(id)
-	if errConv != nil {
-		return c.JSON(400, map[string]interface{}{
-			"message": errConv.Error(),
-		})
+	userId := middlewares.ExtractToken(c)
+	if userId == -1 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail decrypt jwt token"))
 	}
 	var data UserRequest
 	errBind := c.Bind(&data)
@@ -122,32 +119,26 @@ func (handler *userDelivery) UpdateUser(c echo.Context) error {
 	}
 
 	updateCore := ToCore(data)
-	updateCore.ID = uint(idConv)
+	updateCore.ID = uint(userId)
 
 	row, err := handler.userUsecase.PutData(updateCore)
 	if err != nil {
-		return c.JSON(400, map[string]interface{}{
-			"message": "update error",
-		})
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("Fail Update User Data"))
 	}
 
 	if row != 1 {
-		return c.JSON(400, map[string]interface{}{"message": "failed to update"})
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("Update Row Affected Is Not 1"))
 	}
-
-	return c.JSON(200, map[string]interface{}{
-		"message": "update success",
-	})
+	return c.JSON(http.StatusOK, helper.Success_Resp("Success Update Data"))
 }
 
 func (handler *userDelivery) DeleteUser(c echo.Context) error {
-	id := c.Param("id")
-	idConv, errConv := strconv.Atoi(id)
-	if errConv != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, errConv.Error())
+	userId := middlewares.ExtractToken(c)
+	if userId == -1 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail decrypt jwt token"))
 	}
 
-	row, err := handler.userUsecase.DeleteUser(idConv)
+	row, err := handler.userUsecase.DeleteUser(userId)
 	if err != nil {
 		return c.JSON(400, map[string]interface{}{
 			"message": "delete error",
