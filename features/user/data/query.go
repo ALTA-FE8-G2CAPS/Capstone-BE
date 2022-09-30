@@ -139,8 +139,7 @@ func (repo *dataUser) UpdateUser(data user.UserCore) (int, error) {
 }
 
 func (repo *dataUser) InsertOwner(data user.Owner) (row int, err error) {
-	var owner Owner
-	owner.Foto_owner = data.Foto_owner
+	owner := fromCoreOwner(data)
 
 	tx := repo.db.Create(&owner)
 	if tx.Error != nil {

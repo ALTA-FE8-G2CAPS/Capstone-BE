@@ -20,7 +20,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	}
 	e.POST("/users", handler.RegisterUser)
 	e.POST("/login", handler.LoginUser)
-	e.POST("/users/owner", handler.RegisterOwner)
+	e.POST("/users/owner", handler.RegisterOwner, middlewares.JWTMiddleware())
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
 	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
 	e.PUT("/users", handler.UpdateUser, middlewares.JWTMiddleware())
@@ -155,7 +155,13 @@ func (handler *userDelivery) DeleteUser(c echo.Context) error {
 }
 
 func (handler *userDelivery) RegisterOwner(c echo.Context) error {
+	userId := middlewares.ExtractToken(c)
+	if userId == -1 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail decrypt jwt token"))
+	}
+
 	var data OwnerRequest
+	data.UserID = uint(userId)
 	errBind := c.Bind(&data)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to create owner"))
