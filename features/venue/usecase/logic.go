@@ -44,3 +44,11 @@ func (usecase *venueUsecase) PutData(data venue.VenueCore) (int, error) {
 	row, err := usecase.venueData.UpdateVenue(data)
 	return row, err
 }
+
+func (usecase *venueUsecase) DeleteVenue(id int) (int, error) {
+	result, err := usecase.venueData.DeleteVenue(id)
+	if err != nil {
+		return -1, err
+	}
+	return result, nil
+}
