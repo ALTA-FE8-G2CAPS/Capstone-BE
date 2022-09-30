@@ -36,13 +36,13 @@ func (handler *userDelivery) LoginUser(c echo.Context) error {
 	}
 
 	token, err := handler.userUsecase.PostLogin(ToCore(data))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("data doesn't exist"))
+	}
 	claim, _ := middlewares.ExtractClaims(token)
 	role := claim["role"].(string)
 	user := claim["name_user"].(string)
 	user_owner := claim["user_owner"].(bool)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("data doesn't exist"))
-	}
 
 	return c.JSON(http.StatusOK, helper.Success_Login("success login", token, role, user, user_owner))
 

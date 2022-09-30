@@ -97,7 +97,7 @@ func (repo *dataUser) SelectUserById(id int) (user.UserCore, error) {
 func (repo *dataUser) DeleteUser(id int) (row int, err error) {
 	var user User
 	user.ID = uint(id)
-	tx := repo.db.Delete(&user)
+	tx := repo.db.Unscoped().Delete(&user)
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
