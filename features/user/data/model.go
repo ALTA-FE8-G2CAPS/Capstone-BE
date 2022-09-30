@@ -16,7 +16,7 @@ type User struct {
 	Foto_user    string
 	User_owner   bool  `gorm:"default:false"`
 	Owner        Owner `gorm:"foreignKey:UserID"`
-	// Venues       []Venue
+	Venues       []Venue
 }
 
 type Owner struct {
@@ -24,24 +24,22 @@ type Owner struct {
 	Foto_owner string
 }
 
-// type Venue struct {
-// 	gorm.Model
-// 	Nama_venue        string
-// 	Address_venue     string
-// 	UserID            uint
-// 	Description_venue string
-// 	Latitude          string
-// 	Longitude         string
-// 	User              User
-// 	Fields            []Field
-// 	Reviews           []Review
-// 	FotoVenues        []FotoVenue
-// }
+type Venue struct {
+	gorm.Model
+	Name_venue        string
+	Address_venue     string
+	UserID            uint
+	Description_venue string
+	Latitude          float64
+	Longitude         float64
+	FotoVenues        []FotoVenue
+	User              User
+}
 
-// type FotoVenue struct {
-// 	gorm.Model
-// 	Foto_venue string
-// }
+type FotoVenue struct {
+	VenueID    uint
+	Foto_venue string
+}
 
 // type Field struct {
 // 	gorm.Model

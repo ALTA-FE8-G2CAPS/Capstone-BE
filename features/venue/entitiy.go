@@ -2,8 +2,8 @@ package venue
 
 type VenueCore struct {
 	ID                uint
-	Name_Venue        string
-	Address_Venue     string
+	Name_venue        string
+	Address_venue     string
 	Description_venue string
 	UserID            uint
 	Nama_user         string

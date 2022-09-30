@@ -16,7 +16,7 @@ func New(data venue.DataInterface) venue.UsecaseInterface {
 }
 
 func (usecase *venueUsecase) PostData(data venue.VenueCore) (row int, err error) {
-	if data.Name_Venue == "" || data.Address_Venue == "" || data.Description_venue == "" || data.Latitude == 0 || data.Longitude == 0 {
+	if data.Name_venue == "" || data.Address_venue == "" || data.Description_venue == "" || data.Latitude == 0 || data.Longitude == 0 {
 		return -1, errors.New("data tidak boleh kosong")
 	}
 	row, err = usecase.venueData.InsertData(data)
