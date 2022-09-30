@@ -23,8 +23,8 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	e.POST("/users/owner", handler.RegisterOwner)
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
 	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
-	e.PUT("/users/:id", handler.UpdateUser, middlewares.JWTMiddleware())
-	e.DELETE("/users/:id", handler.DeleteUser, middlewares.JWTMiddleware())
+	e.PUT("/users", handler.UpdateUser, middlewares.JWTMiddleware())
+	e.DELETE("/users", handler.DeleteUser, middlewares.JWTMiddleware())
 }
 
 func (handler *userDelivery) LoginUser(c echo.Context) error {
