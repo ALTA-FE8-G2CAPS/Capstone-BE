@@ -77,6 +77,13 @@ func fromCore(data user.UserCore) User {
 	}
 }
 
+func fromCoreOwner(data user.Owner) Owner {
+	return Owner{
+		UserID:     data.UserID,
+		Foto_owner: data.Foto_owner,
+	}
+}
+
 func (data *User) toCore() user.UserCore {
 	return user.UserCore{
 		ID:           data.ID,

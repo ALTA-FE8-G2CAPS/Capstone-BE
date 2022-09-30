@@ -19,7 +19,7 @@ func JWTMiddleware() echo.MiddlewareFunc {
 func CreateToken(userId int, Role, name_user string, user_owner bool) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user_id"] = userId
+	claims["userId"] = userId
 	claims["role"] = Role
 	claims["name_user"] = name_user
 	claims["user_owner"] = user_owner

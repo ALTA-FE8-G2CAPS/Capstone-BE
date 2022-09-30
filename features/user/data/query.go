@@ -97,7 +97,7 @@ func (repo *dataUser) SelectUserById(id int) (user.UserCore, error) {
 func (repo *dataUser) DeleteUser(id int) (row int, err error) {
 	var user User
 	user.ID = uint(id)
-	tx := repo.db.Delete(&user)
+	tx := repo.db.Unscoped().Delete(&user)
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
@@ -139,8 +139,7 @@ func (repo *dataUser) UpdateUser(data user.UserCore) (int, error) {
 }
 
 func (repo *dataUser) InsertOwner(data user.Owner) (row int, err error) {
-	var owner Owner
-	owner.Foto_owner = data.Foto_owner
+	owner := fromCoreOwner(data)
 
 	tx := repo.db.Create(&owner)
 	if tx.Error != nil {
