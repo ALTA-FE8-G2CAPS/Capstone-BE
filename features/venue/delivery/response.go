@@ -7,11 +7,7 @@ type VenueResponse struct {
 	Name_venue        string  `json:"name_venue" form:"name_venue"`
 	Address_venue     string  `json:"address_venue" form:"address_venue"`
 	Description_venue string  `json:"description_venue" form:"description_venue"`
-<<<<<<< HEAD
-	Nama_user         string  `json:"nama_user" form:"nama_user"`
-=======
 	Name_user         string  `json:"name_user" form:"name_user"`
->>>>>>> 31e7c5130e5b0e287b19439499d3cbc57a4d8dff
 	Latitude          float64 `json:"latitude" form:"latitude"`
 	Longitude         float64 `json:"longitude" form:"longitude"`
 }
