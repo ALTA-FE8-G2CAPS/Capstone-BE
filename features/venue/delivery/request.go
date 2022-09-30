@@ -25,8 +25,8 @@ func ToCoreFoto_venue(data Foto_venueRequest) venue.FotoVenue {
 
 func ToCore(data VenueRequest) venue.VenueCore {
 	return venue.VenueCore{
-		Name_Venue:        data.Name_venue,
-		Address_Venue:     data.Address_venue,
+		Name_venue:        data.Name_venue,
+		Address_venue:     data.Address_venue,
 		UserID:            data.UserID,
 		Latitude:          data.Latitude,
 		Longitude:         data.Longitude,
