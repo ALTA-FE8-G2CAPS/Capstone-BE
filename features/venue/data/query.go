@@ -18,9 +18,9 @@ func New(db *gorm.DB) venue.DataInterface {
 }
 
 func (repo *venueData) InsertData(data venue.VenueCore) (int, error) {
-	newClass := fromCore(data)
+	newVenue := fromCore(data)
 
-	tx := repo.db.Create(&newClass)
+	tx := repo.db.Create(&newVenue)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}

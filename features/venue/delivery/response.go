@@ -3,13 +3,13 @@ package delivery
 import "capstone-project/features/venue"
 
 type VenueResponse struct {
-	ID                uint
-	Name_venue        string
-	Address_venue     string
-	Description_venue string
-	Nama_user         string
-	Latitude          float64
-	Longitude         float64
+	ID                uint    `json:"id" form:"id"`
+	Name_venue        string  `json:"name_venue" form:"name_venue"`
+	Address_venue     string  `json:"address_venue" form:"address_venue"`
+	Description_venue string  `json:"description_venue" form:"description_venue"`
+	Name_user         string  `json:"name_user" form:"name_user"`
+	Latitude          float64 `json:"latitude" form:"latitude"`
+	Longitude         float64 `json:"longitude" form:"longitude"`
 }
 
 func FromCore(data venue.VenueCore) VenueResponse {
@@ -18,7 +18,7 @@ func FromCore(data venue.VenueCore) VenueResponse {
 		Name_venue:        data.Name_venue,
 		Address_venue:     data.Address_venue,
 		Description_venue: data.Description_venue,
-		Nama_user:         data.Nama_user,
+		Name_user:         data.Name_user,
 		Latitude:          data.Latitude,
 		Longitude:         data.Longitude,
 	}
