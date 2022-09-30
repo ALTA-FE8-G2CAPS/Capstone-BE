@@ -33,7 +33,7 @@ func ExtractToken(c echo.Context) int {
 	user := c.Get("user").(*jwt.Token)
 	if user.Valid {
 		claims := user.Claims.(jwt.MapClaims)
-		userId := claims["userId"].(float64)
+		userId := claims["user_id"].(float64)
 		return int(userId)
 	}
 	return -1

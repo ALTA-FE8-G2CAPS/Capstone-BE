@@ -26,12 +26,12 @@ type FotoVenue struct {
 type User struct {
 	gorm.Model
 	Name_User    string
-	Email        string
+	Email        string `gorm:"unique"`
 	Password     string
-	Role         string
+	Role         string `gorm:"default:user"`
 	Address_user string
 	Foto_user    string
-	User_owner   bool
+	User_owner   bool `gorm:"default:false"`
 	Owner        Owner
 	Venues       []Venue
 }
