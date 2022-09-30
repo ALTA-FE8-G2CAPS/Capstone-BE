@@ -1,14 +1,14 @@
 package venue
 
 type VenueCore struct {
-	ID           uint
-	Name_Venue   string
-	Addres_Venue string
-	Description  string
-	UserID       uint
-	Latitude     float64
-	Longitude    float64
-	Foto_Venue   []FotoVenue
+	ID                uint
+	Name_Venue        string
+	Address_Venue     string
+	Description_venue string
+	UserID            uint
+	Latitude          float64
+	Longitude         float64
+	Foto_Venue        []FotoVenue
 }
 
 type FotoVenue struct {
