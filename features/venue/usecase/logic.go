@@ -26,29 +26,29 @@ func (usecase *venueUsecase) PostData(data venue.VenueCore) (row int, err error)
 	return row, err
 }
 
-func (usecase *venueUsecase) GetAllVenue(user_id int) ([]venue.VenueCore, error) {
-	dataMentee, err := usecase.venueData.SelectAllVenue(user_id)
-	return dataMentee, err
+// func (usecase *venueUsecase) GetAllVenue(user_id int) ([]venue.VenueCore, error) {
+// 	dataMentee, err := usecase.venueData.SelectAllVenue(user_id)
+// 	return dataMentee, err
 
-}
+// }
 
-func (usecase *venueUsecase) GetVenueById(id int) (venue.VenueCore, error) {
-	result, err := usecase.venueData.SelectVenueById(id)
-	if err != nil {
-		return venue.VenueCore{}, err
-	}
-	return result, nil
-}
+// func (usecase *venueUsecase) GetVenueById(id int) (venue.VenueCore, error) {
+// 	result, err := usecase.venueData.SelectVenueById(id)
+// 	if err != nil {
+// 		return venue.VenueCore{}, err
+// 	}
+// 	return result, nil
+// }
 
-func (usecase *venueUsecase) PutData(data venue.VenueCore) (int, error) {
-	row, err := usecase.venueData.UpdateVenue(data)
-	return row, err
-}
+// func (usecase *venueUsecase) PutData(data venue.VenueCore) (int, error) {
+// 	row, err := usecase.venueData.UpdateVenue(data)
+// 	return row, err
+// }
 
-func (usecase *venueUsecase) DeleteVenue(id int) (int, error) {
-	result, err := usecase.venueData.DeleteVenue(id)
-	if err != nil {
-		return -1, err
-	}
-	return result, nil
-}
+// func (usecase *venueUsecase) DeleteVenue(id int) (int, error) {
+// 	result, err := usecase.venueData.DeleteVenue(id)
+// 	if err != nil {
+// 		return -1, err
+// 	}
+// 	return result, nil
+// }

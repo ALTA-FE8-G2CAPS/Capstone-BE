@@ -17,17 +17,17 @@ type FotoVenue struct {
 }
 
 type UsecaseInterface interface {
-	GetAllVenue(user_id int) (data []VenueCore, err error)
-	GetVenueById(id int) (data VenueCore, err error)
+	// GetAllVenue(user_id int) (data []VenueCore, err error)
+	// GetVenueById(id int) (data VenueCore, err error)
 	PostData(data VenueCore) (row int, err error)
-	PutData(data VenueCore) (row int, err error)
-	DeleteVenue(id int) (row int, err error)
+	// PutData(data VenueCore) (row int, err error)
+	// DeleteVenue(id int) (row int, err error)
 }
 
 type DataInterface interface {
-	SelectAllVenue(user_id int) (data []VenueCore, err error)
-	SelectVenueById(id int) (data VenueCore, err error)
+	// SelectAllVenue(user_id int) (data []VenueCore, err error)
+	// SelectVenueById(id int) (data VenueCore, err error)
 	InsertData(data VenueCore) (row int, err error)
-	UpdateVenue(data VenueCore) (row int, err error)
-	DeleteVenue(id int) (row int, err error)
+	// UpdateVenue(data VenueCore) (row int, err error)
+	// DeleteVenue(id int) (row int, err error)
 }
