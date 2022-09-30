@@ -6,8 +6,8 @@ type VenueCore struct {
 	Addres_Venue string
 	Description  string
 	UserID       uint
-	latitude     float64
-	longitude    float64
+	Latitude     float64
+	Longitude    float64
 	Foto_Venue   []FotoVenue
 }
 
