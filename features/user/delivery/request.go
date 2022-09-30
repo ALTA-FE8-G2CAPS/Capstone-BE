@@ -14,6 +14,18 @@ type UserRequest struct {
 	User_owner   bool   `json:"user_owner" form:"user_owner"`
 }
 
+type OwnerRequest struct {
+	UserID     uint   `json:"user_id" form:"user_id"`
+	Foto_owner string `json:"foto_owner" form:"foto_owner"`
+}
+
+func ToCoreOwner(data OwnerRequest) user.Owner {
+	return user.Owner{
+		UserID:     data.UserID,
+		Foto_owner: data.Foto_owner,
+	}
+}
+
 func ToCore(data UserRequest) user.UserCore {
 	return user.UserCore{
 		Name_User:    data.Name_User,

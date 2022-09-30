@@ -20,6 +20,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	}
 	e.POST("/users", handler.RegisterUser)
 	e.POST("/login", handler.LoginUser)
+	e.POST("/users/owner", handler.RegisterOwner)
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
 	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
 	e.PUT("/users/:id", handler.UpdateUser, middlewares.JWTMiddleware())
@@ -160,4 +161,24 @@ func (handler *userDelivery) DeleteUser(c echo.Context) error {
 	return c.JSON(200, map[string]interface{}{
 		"message": "delete success",
 	})
+}
+
+func (handler *userDelivery) RegisterOwner(c echo.Context) error {
+	var data OwnerRequest
+	errBind := c.Bind(&data)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to create owner"))
+	}
+
+	row, err := handler.userUsecase.PostOwner(ToCoreOwner(data))
+	if err != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	if row != 1 {
+		return c.JSON(400, map[string]interface{}{"message": "failed to create owner"})
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("success create owner"))
 }

@@ -73,10 +73,10 @@ func (usecase *userUsecase) DeleteUser(id int) (row int, err error) {
 	return row, err
 }
 
-// func (usecase *userUsecase) PostOwner(data user.Owner) (row int, err error) {
-// 	row, err = usecase.userData.InsertOwner(data)
-// 	if err != nil {
-// 		return -1, err
-// 	}
-// 	return row, err
-// }
+func (usecase *userUsecase) PostOwner(data user.Owner) (row int, err error) {
+	row, err = usecase.userData.InsertOwner(data)
+	if err != nil {
+		return -1, err
+	}
+	return row, err
+}
