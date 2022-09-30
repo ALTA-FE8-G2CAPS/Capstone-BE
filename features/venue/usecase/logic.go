@@ -31,3 +31,11 @@ func (usecase *venueUsecase) SelectAllVenue(user_id int) ([]venue.VenueCore, err
 	return dataMentee, err
 
 }
+
+func (usecase *venueUsecase) GetVenueById(id int) (venue.VenueCore, error) {
+	result, err := usecase.venueData.SelectVenueById(id)
+	if err != nil {
+		return venue.VenueCore{}, err
+	}
+	return result, nil
+}
