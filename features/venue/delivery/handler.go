@@ -6,6 +6,7 @@ import (
 	"capstone-project/utils/helper"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -49,4 +50,20 @@ func (delivery *venueDelivery) PostVenue(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, helper.Success_Resp("success input"))
 
+}
+
+func (delivery *venueDelivery) GetMentee(c echo.Context) error {
+
+	user_id, err := strconv.Atoi(c.QueryParam("user_id"))
+	if err != nil && user_id != 0 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail converse class_id param"))
+	}
+
+	dataMentee, err := delivery.venueUsecase.GetAllVenue(user_id)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helper.Success_DataResp("get all data success", FromCoreList(dataMentee)))
 }

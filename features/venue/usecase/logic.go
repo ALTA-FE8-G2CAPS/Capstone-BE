@@ -26,11 +26,11 @@ func (usecase *venueUsecase) PostData(data venue.VenueCore) (row int, err error)
 	return row, err
 }
 
-// func (usecase *venueUsecase) GetAllVenue(user_id int) ([]venue.VenueCore, error) {
-// 	dataMentee, err := usecase.venueData.SelectAllVenue(user_id)
-// 	return dataMentee, err
+func (usecase *venueUsecase) GetAllVenue(user_id int) ([]venue.VenueCore, error) {
+	dataMentee, err := usecase.venueData.SelectAllVenue(user_id)
+	return dataMentee, err
 
-// }
+}
 
 // func (usecase *venueUsecase) GetVenueById(id int) (venue.VenueCore, error) {
 // 	result, err := usecase.venueData.SelectVenueById(id)
