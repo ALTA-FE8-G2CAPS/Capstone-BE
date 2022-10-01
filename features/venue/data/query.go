@@ -53,3 +53,18 @@ func (repo *venueData) SelectAllVenue(user_id int) ([]venue.VenueCore, error) {
 	return toCoreList(dataVenue), nil
 
 }
+
+func (repo *venueData) SelectVenueById(id int) (venue.VenueCore, error) {
+	var dataVenue Venue
+	dataVenue.ID = uint(id)
+
+	tx := repo.db.Where("id = ?", id).Preload("User").First(&dataVenue)
+
+	if tx.Error != nil {
+		return venue.VenueCore{}, tx.Error
+	}
+
+	dataVenueCore := dataVenue.toCore()
+	return dataVenueCore, nil
+
+}
