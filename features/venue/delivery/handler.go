@@ -21,6 +21,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 	}
 
 	e.POST("/venues", handler.PostVenue, middlewares.JWTMiddleware())
+	e.GET("/venues", handler.GetVenue, middlewares.JWTMiddleware())
 
 }
 
@@ -52,7 +53,7 @@ func (delivery *venueDelivery) PostVenue(c echo.Context) error {
 
 }
 
-func (delivery *venueDelivery) GetMentee(c echo.Context) error {
+func (delivery *venueDelivery) GetVenue(c echo.Context) error {
 
 	user_id, err := strconv.Atoi(c.QueryParam("user_id"))
 	if err != nil && user_id != 0 {
