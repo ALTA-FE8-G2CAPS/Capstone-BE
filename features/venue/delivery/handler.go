@@ -22,6 +22,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 
 	e.POST("/venues", handler.PostVenue, middlewares.JWTMiddleware())
 	e.GET("/venues", handler.GetVenue, middlewares.JWTMiddleware())
+	e.GET("/venues/:id", handler.GetVenueId, middlewares.JWTMiddleware())
 
 }
 
@@ -67,4 +68,23 @@ func (delivery *venueDelivery) GetVenue(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, helper.Success_DataResp("get all data success", FromCoreList(dataMentee)))
+}
+
+func (delivery *venueDelivery) GetVenueId(c echo.Context) error {
+
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+
+	result, err := delivery.venueUsecase.GetVenueById(id_conv)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail get data"))
+	}
+
+	return c.JSON(http.StatusOK, helper.Success_DataResp("success get data", FromCore(result)))
+
 }
