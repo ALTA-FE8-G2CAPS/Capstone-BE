@@ -68,3 +68,15 @@ func (repo *venueData) SelectVenueById(id int) (venue.VenueCore, error) {
 	return dataVenueCore, nil
 
 }
+
+func (repo *venueData) DeleteVenue(id int) (row int, err error) {
+	var dataVenue Venue
+	dataVenue.ID = uint(id)
+
+	tx := repo.db.Unscoped().Delete(&dataVenue)
+
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
