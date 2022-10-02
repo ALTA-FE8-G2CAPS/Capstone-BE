@@ -21,7 +21,7 @@ type UsecaseInterface interface {
 	GetVenueById(id int) (data VenueCore, err error)
 	PostData(data VenueCore) (row int, err error)
 	// PutData(data VenueCore) (row int, err error)
-	// DeleteVenue(id int) (row int, err error)
+	DeleteVenue(id int) (row int, err error)
 }
 
 type DataInterface interface {
@@ -29,5 +29,5 @@ type DataInterface interface {
 	SelectVenueById(id int) (data VenueCore, err error)
 	InsertData(data VenueCore) (row int, err error)
 	// UpdateVenue(data VenueCore) (row int, err error)
-	// DeleteVenue(id int) (row int, err error)
+	DeleteVenue(id int) (row int, err error)
 }

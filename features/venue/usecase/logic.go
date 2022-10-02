@@ -45,10 +45,10 @@ func (usecase *venueUsecase) GetVenueById(id int) (venue.VenueCore, error) {
 // 	return row, err
 // }
 
-// func (usecase *venueUsecase) DeleteVenue(id int) (int, error) {
-// 	result, err := usecase.venueData.DeleteVenue(id)
-// 	if err != nil {
-// 		return -1, err
-// 	}
-// 	return result, nil
-// }
+func (usecase *venueUsecase) DeleteVenue(id int) (int, error) {
+	result, err := usecase.venueData.DeleteVenue(id)
+	if err != nil {
+		return -1, err
+	}
+	return result, nil
+}
