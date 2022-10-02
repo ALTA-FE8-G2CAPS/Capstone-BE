@@ -23,6 +23,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 	e.POST("/venues", handler.PostVenue, middlewares.JWTMiddleware())
 	e.GET("/venues", handler.GetVenue, middlewares.JWTMiddleware())
 	e.GET("/venues/:id", handler.GetVenueId, middlewares.JWTMiddleware())
+	e.DELETE("/venues/:id", handler.DeleteVenue, middlewares.JWTMiddleware())
 
 }
 
@@ -87,4 +88,20 @@ func (delivery *venueDelivery) GetVenueId(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, helper.Success_DataResp("success get data", FromCore(result)))
 
+}
+
+func (delivery *venueDelivery) DeleteVenue(c echo.Context) error {
+	venueId := middlewares.ExtractToken(c)
+	if venueId == -1 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail operation"))
+	}
+
+	row, err := delivery.venueUsecase.DeleteVenue(venueId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete data"))
+	}
+	if row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete venue"))
+	}
+	return c.JSON(http.StatusOK, helper.Success_DataResp("success delete venue", row))
 }
