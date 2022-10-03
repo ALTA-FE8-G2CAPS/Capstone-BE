@@ -22,6 +22,7 @@ type UsecaseInterface interface {
 	PostData(data VenueCore) (row int, err error)
 	PutData(data VenueCore, user_id int) (row int, err error)
 	DeleteVenue(user_id, venue_id int) (row int, err error)
+	PostPhoto(data FotoVenue) (row int, err error)
 }
 
 type DataInterface interface {
@@ -30,4 +31,5 @@ type DataInterface interface {
 	InsertData(data VenueCore) (row int, err error)
 	UpdateVenue(data VenueCore, user_id int) (row int, err error)
 	DeleteVenue(user_id, venue_id int) (row int, err error)
+	UploadPhoto(data FotoVenue) (row int, err error)
 }
