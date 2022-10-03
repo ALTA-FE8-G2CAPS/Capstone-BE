@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"capstone-project/features/field"
+	"errors"
 )
 
 type FieldUsecase struct {
@@ -20,4 +21,16 @@ func (usecase *FieldUsecase) GetAllField(venue_id int) ([]field.FieldCore, error
 		return nil, err
 	}
 	return dataField, nil
+}
+
+func (usecase *FieldUsecase) PostData(data field.FieldCore) (row int, err error) {
+	if data.Category == "" || data.Price == 0 {
+		return -1, errors.New("data tidak boleh kosong")
+	}
+
+	row, err = usecase.fieldData.InserData(data)
+	if err != nil {
+		return -1, err
+	}
+	return row, err
 }
