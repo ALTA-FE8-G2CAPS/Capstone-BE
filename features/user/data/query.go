@@ -147,3 +147,16 @@ func (repo *dataUser) InsertOwner(data user.Owner) (row int, err error) {
 	}
 	return int(tx.RowsAffected), nil
 }
+
+func (repo *dataUser) SelectVerificationRequest() ([]user.UserCore, error) {
+	var users []User
+	// tx := repo.db.Where("user_owner = false AND foto_owner is null").Preload("Owner").Find(&users)
+
+	tx := repo.db.Joins("inner join owners on owners.user_id = users.id").Where("user_owner= 0").Find(&users)
+	// fmt.Println(users)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	userCore := toCoreList(users)
+	return userCore, nil
+}
