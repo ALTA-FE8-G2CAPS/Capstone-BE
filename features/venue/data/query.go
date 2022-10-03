@@ -70,11 +70,11 @@ func (repo *venueData) SelectVenueById(id int) (venue.VenueCore, error) {
 
 }
 
-func (repo *venueData) DeleteVenue(id int) (row int, err error) {
+func (repo *venueData) DeleteVenue(user_id, venue_id int) (row int, err error) {
 	var dataVenue Venue
-	dataVenue.ID = uint(id)
+	dataVenue.ID = uint(venue_id)
 
-	tx := repo.db.Unscoped().Delete(&dataVenue)
+	tx := repo.db.Where("user_id = ?", user_id).Unscoped().Delete(&dataVenue)
 
 	if tx.Error != nil {
 		return -1, tx.Error
@@ -82,9 +82,9 @@ func (repo *venueData) DeleteVenue(id int) (row int, err error) {
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *venueData) UpdateVenue(data venue.VenueCore) (int, error) {
+func (repo *venueData) UpdateVenue(data venue.VenueCore, user_id int) (int, error) {
 	var venueUpdate Venue
-	txDataOld := repo.db.First(&venueUpdate, data.ID)
+	txDataOld := repo.db.Where("user_id = ?", user_id).First(&venueUpdate, data.ID)
 	// result := repo.db.Model(&Mentee{}).Where("id = ?", data.ID).Updates(fromCore(data))
 	if txDataOld.Error != nil {
 		return -1, txDataOld.Error
@@ -102,7 +102,7 @@ func (repo *venueData) UpdateVenue(data venue.VenueCore) (int, error) {
 		venueUpdate.Description_venue = data.Description_venue
 	}
 
-	tx := repo.db.Save(&venueUpdate)
+	tx := repo.db.Where("user_id = ?", user_id).Save(&venueUpdate)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}

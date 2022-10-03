@@ -40,13 +40,13 @@ func (usecase *venueUsecase) GetVenueById(id int) (venue.VenueCore, error) {
 	return result, nil
 }
 
-func (usecase *venueUsecase) PutData(data venue.VenueCore) (int, error) {
-	row, err := usecase.venueData.UpdateVenue(data)
+func (usecase *venueUsecase) PutData(data venue.VenueCore, user_id int) (int, error) {
+	row, err := usecase.venueData.UpdateVenue(data, user_id)
 	return row, err
 }
 
-func (usecase *venueUsecase) DeleteVenue(id int) (int, error) {
-	result, err := usecase.venueData.DeleteVenue(id)
+func (usecase *venueUsecase) DeleteVenue(user_id, venue_id int) (int, error) {
+	result, err := usecase.venueData.DeleteVenue(user_id, venue_id)
 	if err != nil {
 		return -1, err
 	}
