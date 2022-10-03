@@ -105,7 +105,7 @@ func (delivery *venueDelivery) DeleteVenue(c echo.Context) error {
 	}
 	row, err := delivery.venueUsecase.DeleteVenue(user_id, id_conv)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete data"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete data (mungkin anda tidak mempunyai venue)"))
 	}
 	if row != 1 {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete venue"))
@@ -137,7 +137,7 @@ func (delivery *venueDelivery) UpdateVenue(c echo.Context) error {
 	row, err := delivery.venueUsecase.PutData(venueUpdateCore, user_id)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data (mungkin anda tidak mempunyai venue)"))
 	}
 
 	if row != 1 {
