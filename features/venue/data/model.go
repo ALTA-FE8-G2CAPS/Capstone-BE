@@ -14,12 +14,13 @@ type Venue struct {
 	Description_venue string
 	Latitude          float64
 	Longitude         float64
-	FotoVenues        []FotoVenue `gorm:"foreignKey:VenueID"`
+	FotoVenues        []FotoVenue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	User              User
 }
 
 type FotoVenue struct {
-	VenueID    uint `gorm:"primarykey"`
+	gorm.Model
+	VenueID    uint `gorm:"foreignKey:VenueID"`
 	Foto_venue string
 }
 
@@ -33,12 +34,19 @@ type User struct {
 	Foto_user    string
 	User_owner   bool `gorm:"default:false"`
 	Owner        Owner
-	Venues       []Venue
+	Venues       []Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type Owner struct {
 	UserID     uint
 	Foto_owner string
+}
+
+func fromCoreFoto(data venue.FotoVenue) FotoVenue {
+	return FotoVenue{
+		VenueID:    data.VenueID,
+		Foto_venue: data.Foto_Venue,
+	}
 }
 
 func fromCore(dataCore venue.VenueCore) Venue {

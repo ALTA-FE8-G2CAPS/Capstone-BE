@@ -14,9 +14,9 @@ type User struct {
 	Role         string `gorm:"default:user"`
 	Address_user string
 	Foto_user    string
-	User_owner   bool  `gorm:"default:false"`
-	Owner        Owner `gorm:"foreignKey:UserID"`
-	Venues       []Venue
+	User_owner   bool    `gorm:"default:false"`
+	Owner        Owner   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Venues       []Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type Owner struct {
@@ -37,6 +37,7 @@ type Venue struct {
 }
 
 type FotoVenue struct {
+	gorm.Model
 	VenueID    uint
 	Foto_venue string
 }

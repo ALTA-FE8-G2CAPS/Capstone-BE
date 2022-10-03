@@ -113,3 +113,13 @@ func (repo *venueData) UpdateVenue(data venue.VenueCore, user_id int) (int, erro
 
 	return int(tx.RowsAffected), nil
 }
+
+func (repo *venueData) UploadPhoto(data venue.FotoVenue) (row int, err error) {
+	photo := fromCoreFoto(data)
+
+	tx := repo.db.Create(&photo)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}

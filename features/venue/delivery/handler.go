@@ -25,6 +25,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 	e.GET("/venues/:id", handler.GetVenueId, middlewares.JWTMiddleware())
 	e.DELETE("/venues/:id", handler.DeleteVenue, middlewares.JWTMiddleware())
 	e.PUT("/venues/:id", handler.UpdateVenue, middlewares.JWTMiddleware())
+	e.POST("venues/foto/:id", handler.PostPhoto, middlewares.JWTMiddleware())
 
 }
 
@@ -144,4 +145,31 @@ func (delivery *venueDelivery) UpdateVenue(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("update row affected is not 1"))
 	}
 	return c.JSON(http.StatusOK, helper.Success_Resp("success update data"))
+}
+
+func (delivery *venueDelivery) PostPhoto(c echo.Context) error {
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	var data Foto_venueRequest
+	data.VenueID = uint(id_conv)
+	errBind := c.Bind(&data)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to upload photo"))
+	}
+
+	row, err := delivery.venueUsecase.PostPhoto(ToCoreFoto_venue(data))
+	if err != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	if row != 1 {
+		return c.JSON(400, map[string]interface{}{"message": "failed to upload photo"})
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("success upload photo"))
 }
