@@ -144,9 +144,31 @@ func (handler *userDelivery) UpdateUser(c echo.Context) error {
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to update"))
 	}
-
 	updateCore := ToCore(data)
 	updateCore.ID = uint(userId)
+
+	dataFoto, infoFoto, fotoerr := c.Request().FormFile("foto_user")
+	if fotoerr != http.ErrMissingFile || fotoerr == nil {
+		format, errf := helper.CheckFile(infoFoto.Filename)
+		if errf != nil {
+			return c.JSON(http.StatusBadRequest, helper.Fail_Resp("Format Error"))
+		}
+		//checksize
+		err_image_size := helper.CheckSize(infoFoto.Size)
+		if err_image_size != nil {
+			return c.JSON(http.StatusBadRequest, err_image_size)
+		}
+		//rename
+		waktu := fmt.Sprintf("%v", time.Now())
+		imageName := data.Name_User + "_" + "photo" + waktu + "." + format
+
+		imageaddress, errupload := helper.UploadFileToS3(config.FolderName, imageName, config.FileType, dataFoto)
+		if errupload != nil {
+			return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to upload file"))
+		}
+
+		updateCore.Foto_user = imageaddress
+	}
 
 	row, err := handler.userUsecase.PutData(updateCore)
 	if err != nil {
@@ -192,6 +214,28 @@ func (handler *userDelivery) RegisterOwner(c echo.Context) error {
 	errBind := c.Bind(&data)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to create owner"))
+	}
+	dataFoto, infoFoto, fotoerr := c.Request().FormFile("foto_user")
+	if fotoerr != http.ErrMissingFile || fotoerr == nil {
+		format, errf := helper.CheckFile(infoFoto.Filename)
+		if errf != nil {
+			return c.JSON(http.StatusBadRequest, helper.Fail_Resp("Format Error"))
+		}
+		//checksize
+		err_image_size := helper.CheckSize(infoFoto.Size)
+		if err_image_size != nil {
+			return c.JSON(http.StatusBadRequest, err_image_size)
+		}
+		//rename
+		waktu := fmt.Sprintf("%v", time.Now())
+		imageName := strconv.Itoa(int(data.UserID)) + "_" + "photo" + waktu + "." + format
+
+		imageaddress, errupload := helper.UploadFileToS3(config.FolderName, imageName, config.FileType, dataFoto)
+		if errupload != nil {
+			return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to upload file"))
+		}
+
+		data.Foto_owner = imageaddress
 	}
 
 	row, err := handler.userUsecase.PostOwner(ToCoreOwner(data))
