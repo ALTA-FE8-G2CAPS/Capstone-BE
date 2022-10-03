@@ -1,12 +1,14 @@
 package delivery
 
 import (
+	"capstone-project/config"
 	"capstone-project/features/user"
 	"capstone-project/middlewares"
 	"capstone-project/utils/helper"
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -59,7 +61,28 @@ func (handler *userDelivery) RegisterUser(c echo.Context) error {
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to register"))
 	}
+	dataFoto, infoFoto, fotoerr := c.Request().FormFile("foto_user")
+	if fotoerr != http.ErrMissingFile || fotoerr == nil {
+		format, errf := helper.CheckFile(infoFoto.Filename)
+		if errf != nil {
+			return c.JSON(http.StatusBadRequest, helper.Fail_Resp("Format Error"))
+		}
+		//checksize
+		err_image_size := helper.CheckSize(infoFoto.Size)
+		if err_image_size != nil {
+			return c.JSON(http.StatusBadRequest, err_image_size)
+		}
+		//rename
+		waktu := fmt.Sprintf("%v", time.Now())
+		imageName := data.Name_User + "_" + "photo" + waktu + "." + format
 
+		imageaddress, errupload := helper.UploadFileToS3(config.FolderName, imageName, config.FileType, dataFoto)
+		if errupload != nil {
+			return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to upload file"))
+		}
+
+		data.Foto_user = imageaddress
+	}
 	row, err := handler.userUsecase.PostData(ToCore(data))
 	if err != nil {
 		return c.JSON(400, map[string]interface{}{
