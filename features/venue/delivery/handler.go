@@ -24,6 +24,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 	e.GET("/venues", handler.GetVenue, middlewares.JWTMiddleware())
 	e.GET("/venues/:id", handler.GetVenueId, middlewares.JWTMiddleware())
 	e.DELETE("/venues/:id", handler.DeleteVenue, middlewares.JWTMiddleware())
+	e.PUT("/venues/:id", handler.UpdateVenue, middlewares.JWTMiddleware())
 
 }
 
@@ -104,4 +105,33 @@ func (delivery *venueDelivery) DeleteVenue(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete venue"))
 	}
 	return c.JSON(http.StatusOK, helper.Success_DataResp("success delete venue", row))
+}
+
+func (delivery *venueDelivery) UpdateVenue(c echo.Context) error {
+
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	var venueUpdate VenueRequest
+	errBind := c.Bind(&venueUpdate)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail bind user data"))
+	}
+
+	venueUpdateCore := ToCore(venueUpdate)
+	venueUpdateCore.ID = uint(id_conv)
+
+	row, err := delivery.venueUsecase.PutData(venueUpdateCore)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data"))
+	}
+
+	if row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("update row affected is not 1"))
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("success update data"))
 }
