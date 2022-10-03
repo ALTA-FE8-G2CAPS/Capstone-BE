@@ -74,9 +74,7 @@ func (usecase *userUsecase) DeleteUser(id int) (row int, err error) {
 }
 
 func (usecase *userUsecase) PostOwner(data user.Owner) (row int, err error) {
-	if data.Foto_owner == "" {
-		return -1, errors.New("data tidak boleh kosong")
-	}
+
 	row, err = usecase.userData.InsertOwner(data)
 	if err != nil {
 		return -1, err
