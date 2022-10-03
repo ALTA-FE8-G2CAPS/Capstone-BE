@@ -44,8 +44,9 @@ func (handler *userDelivery) LoginUser(c echo.Context) error {
 	role := claim["role"].(string)
 	user := claim["name_user"].(string)
 	user_owner := claim["user_owner"].(bool)
+	user_id := claim["userId"].(float64)
 
-	return c.JSON(http.StatusOK, helper.Success_Login("success login", token, role, user, user_owner))
+	return c.JSON(http.StatusOK, helper.Success_Login("success login", token, role, user, user_owner, user_id))
 
 }
 

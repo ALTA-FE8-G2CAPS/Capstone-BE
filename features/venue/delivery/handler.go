@@ -30,7 +30,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 
 func (delivery *venueDelivery) PostVenue(c echo.Context) error {
 	userId := middlewares.ExtractToken(c)
-	fmt.Println(userId)
+	// fmt.Println(userId)
 	if userId == -1 {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail decrypt jwt token"))
 	}
@@ -92,14 +92,20 @@ func (delivery *venueDelivery) GetVenueId(c echo.Context) error {
 }
 
 func (delivery *venueDelivery) DeleteVenue(c echo.Context) error {
-	venueId := middlewares.ExtractToken(c)
-	if venueId == -1 {
+	user_id := middlewares.ExtractToken(c)
+	if user_id == -1 {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail operation"))
 	}
 
-	row, err := delivery.venueUsecase.DeleteVenue(venueId)
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	row, err := delivery.venueUsecase.DeleteVenue(user_id, id_conv)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete data"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete data (mungkin anda tidak mempunyai venue)"))
 	}
 	if row != 1 {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to delete venue"))
@@ -108,6 +114,10 @@ func (delivery *venueDelivery) DeleteVenue(c echo.Context) error {
 }
 
 func (delivery *venueDelivery) UpdateVenue(c echo.Context) error {
+	user_id := middlewares.ExtractToken(c)
+	if user_id == -1 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail operation"))
+	}
 
 	id := c.Param("id")
 	id_conv, err_conv := strconv.Atoi(id)
@@ -124,10 +134,10 @@ func (delivery *venueDelivery) UpdateVenue(c echo.Context) error {
 	venueUpdateCore := ToCore(venueUpdate)
 	venueUpdateCore.ID = uint(id_conv)
 
-	row, err := delivery.venueUsecase.PutData(venueUpdateCore)
+	row, err := delivery.venueUsecase.PutData(venueUpdateCore, user_id)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data (mungkin anda tidak mempunyai venue)"))
 	}
 
 	if row != 1 {
