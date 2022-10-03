@@ -1,0 +1,27 @@
+name : Deploy to EC2
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing connect to server using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/ubuntu/Capstone-BE
+            git pull origin main
+            docker stop Capstone-BE
+            docker rm Capstone-BE
+            docker build -t Capstone-BE-images:latest .
+            docker run -d -p 80:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} -e AWS_REGION=${{ secrets.AWS_REGION }} -e S3_KEY=${{ secrets.S3_KEY }} -e S3_SECRET=${{ secrets.S3_SECRET }} -e AWS_BUCKET=${{ secrets.AWS_BUCKET }} --name Capstone-BE Capstone-BE-images:latest
+ 
