@@ -29,6 +29,7 @@ type UsecaseInterface interface {
 	PutData(data UserCore) (row int, err error)
 	DeleteUser(id int) (row int, err error)
 	PostOwner(data Owner) (row int, err error)
+	GetVerificationRequest() (data []UserCore, err error)
 }
 
 type DataInterface interface {
@@ -39,4 +40,5 @@ type DataInterface interface {
 	UpdateUser(data UserCore) (row int, err error)
 	DeleteUser(id int) (row int, err error)
 	InsertOwner(data Owner) (row int, err error)
+	SelectVerificationRequest() (data []UserCore, err error)
 }

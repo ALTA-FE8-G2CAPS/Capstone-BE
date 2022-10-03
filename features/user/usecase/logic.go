@@ -83,3 +83,11 @@ func (usecase *userUsecase) PostOwner(data user.Owner) (row int, err error) {
 	}
 	return row, err
 }
+
+func (usecase *userUsecase) GetVerificationRequest() (data []user.UserCore, err error) {
+	data, err = usecase.userData.SelectVerificationRequest()
+	if err != nil {
+		return nil, err
+	}
+	return data, err
+}
