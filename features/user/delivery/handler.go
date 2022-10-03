@@ -4,6 +4,7 @@ import (
 	"capstone-project/features/user"
 	"capstone-project/middlewares"
 	"capstone-project/utils/helper"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -25,6 +26,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 	e.GET("/users/request", handler.GetAllRequest, middlewares.JWTMiddleware())
 	e.GET("/users/:id", handler.GetUserById, middlewares.JWTMiddleware())
 	e.PUT("/users", handler.UpdateUser, middlewares.JWTMiddleware())
+	e.PUT("/users/adminapprove/:id", handler.Approve, middlewares.JWTMiddleware())
 	e.DELETE("/users", handler.DeleteUser, middlewares.JWTMiddleware())
 }
 
@@ -193,4 +195,35 @@ func (handler *userDelivery) GetAllRequest(c echo.Context) error {
 		"message": "success",
 		"data":    FromCoreList(data),
 	})
+}
+func (handler *userDelivery) Approve(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(400, map[string]interface{}{
+			"message": errConv.Error(),
+		})
+	}
+
+	var data UserRequest
+	errBind := c.Bind(&data)
+
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to update"))
+	}
+
+	updateCore := ToCore(data)
+	updateCore.ID = uint(idConv)
+	updateCore.User_owner = bool(true)
+	fmt.Println(updateCore)
+
+	row, err := handler.userUsecase.AdminApprove(updateCore)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("Fail Update User Data"))
+	}
+
+	if row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("Update Row Affected Is Not 1"))
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("Success Update Data"))
 }

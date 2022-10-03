@@ -91,3 +91,12 @@ func (usecase *userUsecase) GetVerificationRequest() (data []user.UserCore, err 
 	}
 	return data, err
 }
+
+func (usecase *userUsecase) AdminApprove(data user.UserCore) (row int, err error) {
+
+	row, err = usecase.userData.AdminApprove(data)
+	if err != nil {
+		return -1, err
+	}
+	return row, err
+}
