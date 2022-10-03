@@ -11,6 +11,11 @@ type VenueResponse struct {
 	Name_user         string  `json:"name_user" form:"name_user"`
 	Latitude          float64 `json:"latitude" form:"latitude"`
 	Longitude         float64 `json:"longitude" form:"longitude"`
+	Foto              []Foto_venueResponse
+}
+
+type Foto_venueResponse struct {
+	Foto_Venue string `json:"foto_venue" form:"foto_venue"`
 }
 
 func FromCore(data venue.VenueCore) VenueResponse {
@@ -27,6 +32,19 @@ func FromCore(data venue.VenueCore) VenueResponse {
 
 }
 
+func FromCoreFoto(data venue.FotoVenue) Foto_venueResponse {
+	return Foto_venueResponse{
+		Foto_Venue: data.Foto_Venue,
+	}
+}
+
+func FromCoreFotoList(data []venue.FotoVenue) []Foto_venueResponse {
+	var list []Foto_venueResponse
+	for _, v := range data {
+		list = append(list, FromCoreFoto(v))
+	}
+	return list
+}
 func FromCoreList(data []venue.VenueCore) []VenueResponse {
 	var list []VenueResponse
 	for _, v := range data {

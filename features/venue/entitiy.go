@@ -9,6 +9,7 @@ type VenueCore struct {
 	Name_user         string
 	Latitude          float64
 	Longitude         float64
+	Foto              []FotoVenue
 }
 
 type FotoVenue struct {

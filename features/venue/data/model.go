@@ -60,6 +60,12 @@ func fromCore(dataCore venue.VenueCore) Venue {
 	}
 }
 
+func (dataVenue *FotoVenue) toCoreFoto() venue.FotoVenue {
+	return venue.FotoVenue{
+		Foto_Venue: dataVenue.Foto_venue,
+	}
+}
+
 func (dataVenue *Venue) toCore() venue.VenueCore {
 	return venue.VenueCore{
 		ID:                dataVenue.ID,
@@ -78,6 +84,15 @@ func toCoreList(dataVenue []Venue) []venue.VenueCore {
 
 	for key := range dataVenue {
 		dataCore = append(dataCore, dataVenue[key].toCore())
+	}
+	return dataCore
+}
+
+func toCoreFotoList(dataVenue []FotoVenue) []venue.FotoVenue {
+	var dataCore []venue.FotoVenue
+
+	for key := range dataVenue {
+		dataCore = append(dataCore, dataVenue[key].toCoreFoto())
 	}
 	return dataCore
 }
