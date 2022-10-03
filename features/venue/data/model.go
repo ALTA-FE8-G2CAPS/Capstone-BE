@@ -70,6 +70,7 @@ func (dataVenue *Venue) toCore() venue.VenueCore {
 		Name_user:         dataVenue.User.Name_User,
 		Latitude:          dataVenue.Latitude,
 		Longitude:         dataVenue.Longitude,
+		Foto_venue:        toCoreFotoList(dataVenue.FotoVenues),
 	}
 }
 
@@ -78,6 +79,18 @@ func toCoreList(dataVenue []Venue) []venue.VenueCore {
 
 	for key := range dataVenue {
 		dataCore = append(dataCore, dataVenue[key].toCore())
+	}
+	return dataCore
+}
+
+func toCoreFotoList(dataVenue []FotoVenue) []venue.FotoVenue {
+	var dataCore []venue.FotoVenue
+
+	for key := range dataVenue {
+		var foto_venue venue.FotoVenue
+		foto_venue.VenueID = dataVenue[key].VenueID
+		foto_venue.Foto_Venue = dataVenue[key].Foto_venue
+		dataCore = append(dataCore, foto_venue)
 	}
 	return dataCore
 }

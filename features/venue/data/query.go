@@ -38,7 +38,7 @@ func (repo *venueData) SelectAllVenue(user_id int) ([]venue.VenueCore, error) {
 	var dataVenue []Venue
 
 	if user_id != 0 {
-		tx := repo.db.Where("user_id = ?", user_id).Preload("User").Find(&dataVenue)
+		tx := repo.db.Where("user_id = ?", user_id).Preload("FotoVenues").Preload("User").Find(&dataVenue)
 
 		if tx.Error != nil {
 			return []venue.VenueCore{}, tx.Error
