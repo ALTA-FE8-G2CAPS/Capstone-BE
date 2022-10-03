@@ -34,3 +34,11 @@ func (usecase *FieldUsecase) PostData(data field.FieldCore) (row int, err error)
 	}
 	return row, err
 }
+
+func (usecase *FieldUsecase) GetFieldById(id int) (field.FieldCore, error) {
+	result, err := usecase.fieldData.SelectFieldById(id)
+	if err != nil {
+		return field.FieldCore{}, errors.New("data tidak ditemukan")
+	}
+	return result, nil
+}
