@@ -2,6 +2,7 @@ package data
 
 import (
 	"capstone-project/features/venue"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -78,5 +79,37 @@ func (repo *venueData) DeleteVenue(id int) (row int, err error) {
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
+	return int(tx.RowsAffected), nil
+}
+
+func (repo *venueData) UpdateVenue(data venue.VenueCore) (int, error) {
+	var venueUpdate Venue
+	txDataOld := repo.db.First(&venueUpdate, data.ID)
+	// result := repo.db.Model(&Mentee{}).Where("id = ?", data.ID).Updates(fromCore(data))
+	if txDataOld.Error != nil {
+		return -1, txDataOld.Error
+	}
+
+	if data.Name_venue != "" {
+		venueUpdate.Name_venue = data.Name_venue
+	}
+
+	if data.Address_venue != "" {
+		venueUpdate.Address_venue = data.Address_venue
+	}
+
+	if data.Description_venue != "" {
+		venueUpdate.Description_venue = data.Description_venue
+	}
+
+	tx := repo.db.Save(&venueUpdate)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+
+	if tx.RowsAffected != 1 {
+		return 0, errors.New("zero row affected, fail update")
+	}
+
 	return int(tx.RowsAffected), nil
 }
