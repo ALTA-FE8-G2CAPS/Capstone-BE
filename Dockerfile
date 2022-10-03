@@ -10,6 +10,6 @@ COPY ./ /app
 
 RUN go mod tidy
 
-RUN go build -o Capstone-BE
+RUN go build -o capstone-be
 
-CMD ("./Capstone-BE")
+CMD ("./capstone-be")
