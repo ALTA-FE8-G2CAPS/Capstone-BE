@@ -219,11 +219,11 @@ func (handler *userDelivery) Approve(c echo.Context) error {
 
 	row, err := handler.userUsecase.AdminApprove(updateCore)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("Fail Update User Data"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("Failed approve request"))
 	}
 
 	if row != 1 {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("Update Row Affected Is Not 1"))
 	}
-	return c.JSON(http.StatusOK, helper.Success_Resp("Success Update Data"))
+	return c.JSON(http.StatusOK, helper.Success_Resp("Success approve request "))
 }
