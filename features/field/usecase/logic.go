@@ -16,7 +16,7 @@ func New(data field.DataInterface) field.UsecaseInterface {
 }
 
 func (usecase *FieldUsecase) GetAllField(venue_id int) ([]field.FieldCore, error) {
-	dataField, err := usecase.fieldData.SelectAllField()
+	dataField, err := usecase.fieldData.SelectAllField(venue_id)
 	if err != nil {
 		return nil, err
 	}
@@ -24,11 +24,11 @@ func (usecase *FieldUsecase) GetAllField(venue_id int) ([]field.FieldCore, error
 }
 
 func (usecase *FieldUsecase) PostData(data field.FieldCore) (row int, err error) {
-	if data.Category == "" || data.Price == 0 {
+	if data.VenueID == 0 || data.Category == "" || data.Price == 0 {
 		return -1, errors.New("data tidak boleh kosong")
 	}
 
-	row, err = usecase.fieldData.InserData(data)
+	row, err = usecase.fieldData.InsertData(data)
 	if err != nil {
 		return -1, err
 	}

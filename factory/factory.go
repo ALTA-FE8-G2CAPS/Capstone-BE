@@ -9,6 +9,10 @@ import (
 	venueDelivery "capstone-project/features/venue/delivery"
 	venueUsecase "capstone-project/features/venue/usecase"
 
+	fieldData "capstone-project/features/field/data"
+	fieldDelivery "capstone-project/features/field/delivery"
+	fieldUsecase "capstone-project/features/field/usecase"
+
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -21,5 +25,9 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 	venueDataFactory := venueData.New(db)
 	venueUsecaseFactory := venueUsecase.New(venueDataFactory)
 	venueDelivery.New(e, venueUsecaseFactory)
+
+	fieldDataFactory := fieldData.New(db)
+	fieldUsecaseFactory := fieldUsecase.New(fieldDataFactory)
+	fieldDelivery.New(e, fieldUsecaseFactory)
 
 }
