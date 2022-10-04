@@ -71,7 +71,7 @@ func (repo *fieldData) SelectFieldById(id int) (field.FieldCore, error) {
 
 }
 
-func (repo *fieldData) UpdateField(data field.FieldCore, user_id, venue_id, field_id int) (int, error) {
+func (repo *fieldData) UpdateField(data field.FieldCore, user_id int) (int, error) {
 	var fieldUpdate Field
 	tx := repo.db.Where("user_id = ?", user_id).First(&fieldUpdate, data.ID)
 	if tx.Error != nil {

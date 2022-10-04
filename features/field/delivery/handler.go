@@ -23,6 +23,7 @@ func New(e *echo.Echo, usecase field.UsecaseInterface) {
 	e.GET("/fields", handler.GetField, middlewares.JWTMiddleware())
 	e.GET("/fields/:id", handler.GetFieldId, middlewares.JWTMiddleware())
 	e.DELETE("/fields/:id", handler.DeleteField, middlewares.JWTMiddleware())
+	e.PUT("/fields/:id", handler.UpdateField, middlewares.JWTMiddleware())
 
 }
 
@@ -102,4 +103,37 @@ func (delivery *fieldDelivery) DeleteField(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("rows affected 0, fail delete data"))
 	}
 	return c.JSON(http.StatusOK, helper.Success_Resp("success delete data"))
+}
+
+func (delivery *fieldDelivery) UpdateField(c echo.Context) error {
+	user_id := middlewares.ExtractToken(c)
+	if user_id == -1 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail operation"))
+	}
+
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	var fieldUpdate FieldRequest
+	errBind := c.Bind(&fieldUpdate)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail bind user data"))
+	}
+
+	fieldUpdateCore := ToCore(fieldUpdate)
+	fieldUpdateCore.ID = uint(id_conv)
+
+	row, err := delivery.fieldUsecase.PutData(fieldUpdateCore, user_id)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data"))
+	}
+
+	if row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("rows affected 0, fail update data"))
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("success update data"))
 }

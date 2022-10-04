@@ -51,8 +51,8 @@ func (usecase *FieldUsecase) DeleteField(user_id, field_id int) (row int, err er
 	return result, err
 }
 
-func (usecase *FieldUsecase) PutData(data field.FieldCore, user_id, venue_id, field_id int) (row int, err error) {
-	row, err = usecase.fieldData.UpdateField(data, user_id, venue_id, field_id)
+func (usecase *FieldUsecase) PutData(data field.FieldCore, user_id int) (row int, err error) {
+	row, err = usecase.fieldData.UpdateField(data, user_id)
 	if err != nil {
 		return -1, err
 	}
