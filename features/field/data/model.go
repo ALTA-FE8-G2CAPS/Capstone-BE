@@ -10,7 +10,7 @@ type Field struct {
 	gorm.Model
 	VenueID  uint `gorm:"foreignKey:VenueID"`
 	Category string
-	Price    float64
+	Price    uint
 	Venue    Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
