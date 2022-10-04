@@ -96,7 +96,7 @@ func (repo *fieldData) UpdateField(data field.FieldCore, user_id, venue_id, fiel
 	return int(txNow.RowsAffected), nil
 }
 
-func (repo *fieldData) DeleteField(user_id, venue_id, field_id int) (int, error) {
+func (repo *fieldData) DeleteField(user_id, field_id int) (int, error) {
 	var dataField Field
 	dataField.ID = uint(field_id)
 	tx := repo.db.Where("user_id = ?", user_id).Unscoped().Delete(&dataField)

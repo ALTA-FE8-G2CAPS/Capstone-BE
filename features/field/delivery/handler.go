@@ -10,22 +10,23 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type fieldDeliveryvery struct {
+type fieldDelivery struct {
 	fieldUsecase field.UsecaseInterface
 }
 
 func New(e *echo.Echo, usecase field.UsecaseInterface) {
-	handler := &fieldDeliveryvery{
+	handler := &fieldDelivery{
 		fieldUsecase: usecase,
 	}
 
 	e.POST("/fields", handler.PostField, middlewares.JWTMiddleware())
 	e.GET("/fields", handler.GetField, middlewares.JWTMiddleware())
 	e.GET("/fields/:id", handler.GetFieldId, middlewares.JWTMiddleware())
+	e.DELETE("/fields/:id", handler.DeleteField, middlewares.JWTMiddleware())
 
 }
 
-func (delivery *fieldDeliveryvery) PostField(c echo.Context) error {
+func (delivery *fieldDelivery) PostField(c echo.Context) error {
 
 	var fieldRequestdata FieldRequest
 	errBind := c.Bind(&fieldRequestdata)
@@ -47,7 +48,7 @@ func (delivery *fieldDeliveryvery) PostField(c echo.Context) error {
 
 }
 
-func (delivery *fieldDeliveryvery) GetField(c echo.Context) error {
+func (delivery *fieldDelivery) GetField(c echo.Context) error {
 
 	venue_id, err := strconv.Atoi(c.QueryParam("venue_id"))
 	if err != nil && venue_id != 0 {
@@ -63,7 +64,7 @@ func (delivery *fieldDeliveryvery) GetField(c echo.Context) error {
 	return c.JSON(http.StatusOK, helper.Success_DataResp("get all data success", FromCoreList(data)))
 }
 
-func (delivery *fieldDeliveryvery) GetFieldId(c echo.Context) error {
+func (delivery *fieldDelivery) GetFieldId(c echo.Context) error {
 
 	id := c.Param("id")
 	id_conv, err_conv := strconv.Atoi(id)
@@ -80,4 +81,25 @@ func (delivery *fieldDeliveryvery) GetFieldId(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, helper.Success_DataResp("success get data", FromCore(result)))
 
+}
+
+func (delivery *fieldDelivery) DeleteField(c echo.Context) error {
+	user_id := middlewares.ExtractToken(c)
+	if user_id == 0 {
+		return c.JSON(http.StatusUnauthorized, helper.Fail_Resp("unauthorized"))
+	}
+
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	row, err := delivery.fieldUsecase.DeleteField(user_id, id_conv)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail delete data"))
+	}
+	if row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("rows affected 0, fail delete data"))
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("success delete data"))
 }
