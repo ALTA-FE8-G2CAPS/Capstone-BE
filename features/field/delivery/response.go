@@ -5,11 +5,11 @@ import (
 )
 
 type FieldResponse struct {
-	ID         uint    `json:"id"`
-	VenueID    uint    `json:"venue_id"`
-	Name_venue string  `json:"name_venue"`
-	Category   string  `json:"category"`
-	Price      float64 `json:"price"`
+	ID         uint   `json:"id"`
+	VenueID    uint   `json:"venue_id"`
+	Name_venue string `json:"name_venue"`
+	Category   string `json:"category"`
+	Price      uint   `json:"price"`
 }
 
 func FromCore(data field.FieldCore) FieldResponse {

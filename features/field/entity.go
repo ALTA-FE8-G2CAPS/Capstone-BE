@@ -5,7 +5,7 @@ type FieldCore struct {
 	VenueID    uint
 	Name_venue string
 	Category   string
-	Price      float64
+	Price      uint
 }
 
 type UsecaseInterface interface {

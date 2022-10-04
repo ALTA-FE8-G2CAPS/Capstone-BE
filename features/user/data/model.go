@@ -17,6 +17,7 @@ type User struct {
 	User_owner   bool    `gorm:"default:false"`
 	Owner        Owner   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Venues       []Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Bookings     []Booking
 }
 
 type Owner struct {
@@ -40,6 +41,30 @@ type FotoVenue struct {
 	gorm.Model
 	VenueID    uint
 	Foto_venue string
+}
+
+type Booking struct {
+	gorm.Model
+	UserID           uint
+	FieldID          uint
+	Start_hours      uint
+	End_hours        uint
+	Total_price      uint
+	Payment_method   string
+	TransactionID    uint
+	Status_payment   string
+	Virtual_account  string
+	Transaction_time string
+	User             User
+	Field            Field
+}
+
+type Field struct {
+	gorm.Model
+	VenueID  uint `gorm:"foreignKey:VenueID"`
+	Category string
+	Price    uint
+	Venue    Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 // type Field struct {
