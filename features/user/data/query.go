@@ -189,9 +189,10 @@ func (repo *dataUser) AdminApprove(data user.UserCore) (int, error) {
 		userUpdate.Address_user = data.Address_user
 	}
 
-	if !data.User_owner {
-		userUpdate.User_owner = data.User_owner
+	if data.User_owner == false {
+		userUpdate.User_owner = true
 	}
+	// fmt.Println(userUpdate.User_owner)
 	tx := repo.db.Save(&userUpdate)
 	if tx.Error != nil {
 		return 0, tx.Error
