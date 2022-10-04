@@ -281,8 +281,6 @@ func (handler *userDelivery) Approve(c echo.Context) error {
 
 	updateCore := ToCore(data)
 	updateCore.ID = uint(idConv)
-	updateCore.User_owner = bool(true)
-	fmt.Println(updateCore)
 
 	row, err := handler.userUsecase.AdminApprove(updateCore)
 	if err != nil {
