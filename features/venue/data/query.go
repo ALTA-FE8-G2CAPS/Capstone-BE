@@ -86,7 +86,6 @@ func (repo *venueData) DeleteVenue(user_id, venue_id int) (row int, err error) {
 func (repo *venueData) UpdateVenue(data venue.VenueCore, user_id int) (int, error) {
 	var venueUpdate Venue
 	txDataOld := repo.db.Where("user_id = ?", user_id).First(&venueUpdate, data.ID)
-	// result := repo.db.Model(&Mentee{}).Where("id = ?", data.ID).Updates(fromCore(data))
 	if txDataOld.Error != nil {
 		return -1, txDataOld.Error
 	}
