@@ -1,10 +1,11 @@
 package field
 
 type FieldCore struct {
-	ID       uint
-	VenueID  uint
-	Category string
-	Price    int
+	ID         uint
+	VenueID    uint
+	Name_venue string
+	Category   string
+	Price      float64
 }
 
 type UsecaseInterface interface {
@@ -16,9 +17,9 @@ type UsecaseInterface interface {
 }
 
 type DataInterface interface {
-	SelectAllField() (data []FieldCore, err error)
+	SelectAllField(venue_id int) (data []FieldCore, err error)
 	SelectFieldById(id int) (data FieldCore, err error)
-	InserData(data FieldCore) (row int, err error)
+	InsertData(data FieldCore) (row int, err error)
 	// UpdateField(data FieldCore) (row int, err error)
 	// DeleteField(vneue_id, field_id int) (row int, err error)
 }
