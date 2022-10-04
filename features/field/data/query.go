@@ -71,7 +71,7 @@ func (repo *fieldData) SelectFieldById(id int) (field.FieldCore, error) {
 
 }
 
-func (repo *fieldData) UpdateField(data field.FieldCore, user_id int) (int, error) {
+func (repo *fieldData) UpdateField(data field.FieldCore, user_id, venue_id, field_id int) (int, error) {
 	var fieldUpdate Field
 	tx := repo.db.Where("user_id = ?", user_id).First(&fieldUpdate, data.ID)
 	if tx.Error != nil {
@@ -94,4 +94,17 @@ func (repo *fieldData) UpdateField(data field.FieldCore, user_id int) (int, erro
 		return 0, errors.New("update failed, rows affected 0")
 	}
 	return int(txNow.RowsAffected), nil
+}
+
+func (repo *fieldData) DeleteField(user_id, venue_id, field_id int) (int, error) {
+	var dataField Field
+	dataField.ID = uint(field_id)
+	tx := repo.db.Where("user_id = ?", user_id).Unscoped().Delete(&dataField)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return 0, errors.New("delete failed, rows affected 0")
+	}
+	return int(tx.RowsAffected), nil
 }
