@@ -16,7 +16,7 @@ type Booking struct {
 	Payment_method   string
 	OrderID          uint
 	TransactionID    uint
-	Status_payment   string
+	Status_payment   string `gorm:"default:pending"`
 	Virtual_account  string
 	Transaction_time string
 	User             User  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`

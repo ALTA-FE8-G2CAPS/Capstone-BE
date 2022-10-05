@@ -45,7 +45,7 @@ func (repo *dataUser) LoginUser(data user.UserCore) (token string, err error) {
 		return "", errors.New("acount not found")
 	}
 
-	token, err = middlewares.CreateToken(int(user.ID), user.Role, user.Name_User, user.User_owner)
+	token, err = middlewares.CreateToken(int(user.ID), user.Role, user.Name_User, user.Foto_user, user.User_owner)
 	if err != nil {
 		return "", err
 	}
