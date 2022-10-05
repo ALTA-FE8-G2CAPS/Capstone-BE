@@ -12,10 +12,10 @@ type ReviewCore struct {
 
 type Usecaseinterface interface {
 	PostReview(data ReviewCore) (row int, err error)
-	GetReviewById(venue_id int) (data ReviewCore, err error)
+	GetReviewById(venue_id int) (data []ReviewCore, err error)
 }
 
 type DataInterface interface {
 	InsertReview(data ReviewCore) (row int, err error)
-	SelectReviewById(venue_id int) (data ReviewCore, err error)
+	SelectReviewById(venue_id int) (data []ReviewCore, err error)
 }
