@@ -54,9 +54,7 @@ func (usecase *venueUsecase) DeleteVenue(user_id, venue_id int) (int, error) {
 }
 
 func (usecase *venueUsecase) PostPhoto(data venue.FotoVenue) (row int, err error) {
-	if data.Foto_Venue == "" {
-		return -1, errors.New("data tidak boleh kosong")
-	}
+
 	row, err = usecase.venueData.UploadPhoto(data)
 	if err != nil {
 		return -1, err

@@ -16,7 +16,7 @@ func New(data schedule.DataInterface) schedule.UsecaseInterface {
 }
 
 func (usecase *scheduleUsecase) PostData(data schedule.ScheduleCore) (row int, err error) {
-	if data.FieldID == 0 || data.Category == "" || data.Day == "" || data.Start_hours == "" || data.End_hours == "" {
+	if data.FieldID == 0 || data.Day == "" || data.Start_hours == "" || data.End_hours == "" {
 		return -1, errors.New("data tidak boleh kosong")
 	}
 	row, err = usecase.scheduleData.InsertData(data)
