@@ -11,7 +11,25 @@ type Field struct {
 	VenueID  uint `gorm:"foreignKey:VenueID"`
 	Category string
 	Price    uint
-	Venue    Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Venue    Venue    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Schedule Schedule `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+type Schedule struct {
+	gorm.Model
+	FieldID        uint `gorm:"foreignKey:FieldID"`
+	Days           string
+	Start_hours    uint
+	End_hours      uint
+	ScheduleDetail []ScheduleDetail `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+type ScheduleDetail struct {
+	gorm.Model
+	ScheduleID      uint `gorm:"foreignkey:ScheduleID"`
+	Start_hours     uint
+	End_hours       uint
+	Status_schedule string
 }
 
 type Venue struct {
