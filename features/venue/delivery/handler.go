@@ -1,12 +1,14 @@
 package delivery
 
 import (
+	"capstone-project/config"
 	"capstone-project/features/venue"
 	"capstone-project/middlewares"
 	"capstone-project/utils/helper"
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -154,6 +156,7 @@ func (delivery *venueDelivery) PostPhoto(c echo.Context) error {
 	if err_conv != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
 	}
+
 	var data Foto_venueRequest
 	data.VenueID = uint(id_conv)
 	errBind := c.Bind(&data)
@@ -161,6 +164,28 @@ func (delivery *venueDelivery) PostPhoto(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to upload photo"))
 	}
 
+	dataFoto, infoFoto, fotoerr := c.Request().FormFile("foto_venue")
+	if fotoerr != http.ErrMissingFile || fotoerr == nil {
+		format, errf := helper.CheckFile(infoFoto.Filename)
+		if errf != nil {
+			return c.JSON(http.StatusBadRequest, helper.Fail_Resp("Format Error"))
+		}
+		//checksize
+		err_image_size := helper.CheckSize(infoFoto.Size)
+		if err_image_size != nil {
+			return c.JSON(http.StatusBadRequest, err_image_size)
+		}
+		//rename
+		waktu := fmt.Sprintf("%v", time.Now())
+		imageName := strconv.Itoa(int(data.VenueID)) + "_" + "photo" + waktu + "." + format
+
+		imageaddress, errupload := helper.UploadFileToS3(config.FolderName, imageName, config.FileType, dataFoto)
+		if errupload != nil {
+			return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to upload file"))
+		}
+
+		data.Foto_venue = imageaddress
+	}
 	row, err := delivery.venueUsecase.PostPhoto(ToCoreFoto_venue(data))
 	if err != nil {
 		return c.JSON(400, map[string]interface{}{
