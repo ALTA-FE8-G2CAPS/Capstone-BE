@@ -4,6 +4,7 @@ type ReviewCore struct {
 	ID          uint
 	Name_user   string
 	UserID      uint
+	Nama_venue  string
 	VenueID     uint
 	Rate        uint
 	Feedback    string
