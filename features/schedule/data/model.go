@@ -1,11 +1,27 @@
 package data
 
 import (
-	"capstone-project/features/field"
+	"capstone-project/features/schedule"
 
 	"gorm.io/gorm"
 )
 
+type Schedule struct {
+	gorm.Model
+	FieldID         uint `gorm:"foreignkey:FieldID"`
+	Day             string
+	Start_hours     string
+	End_hours       string
+	Field           Field
+	ScheduleDetails []ScheduleDetail `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+type ScheduleDetail struct {
+	gorm.Model
+	ScheduleID      uint `gorm:"foreignkey:ScheduleID"`
+	Start_hours     uint
+	End_hours       uint
+	Status_schedule string
+}
 type Field struct {
 	gorm.Model
 	VenueID   uint `gorm:"foreignKey:VenueID"`
@@ -13,23 +29,6 @@ type Field struct {
 	Price     uint
 	Venue     Venue      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Schedules []Schedule `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
-type Schedule struct {
-	gorm.Model
-	FieldID        uint `gorm:"foreignKey:FieldID"`
-	Days           string
-	Start_hours    uint
-	End_hours      uint
-	ScheduleDetail []ScheduleDetail `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
-type ScheduleDetail struct {
-	gorm.Model
-	ScheduleID      uint `gorm:"foreignkey:ScheduleID"`
-	Start_hours     uint
-	End_hours       uint
-	Status_schedule string
 }
 
 type Venue struct {
@@ -69,26 +68,28 @@ type Owner struct {
 	Foto_owner string
 }
 
-func fromCore(data field.FieldCore) Field {
-	return Field{
-		VenueID:  data.VenueID,
-		Category: data.Category,
-		Price:    data.Price,
+func fromCore(data schedule.ScheduleCore) Schedule {
+	return Schedule{
+		FieldID:     data.FieldID,
+		Day:         data.Day,
+		Start_hours: data.Start_hours,
+		End_hours:   data.End_hours,
 	}
 }
 
-func (data *Field) toCore() field.FieldCore {
-	return field.FieldCore{
-		ID:         data.ID,
-		VenueID:    data.VenueID,
-		Name_venue: data.Venue.Name_venue,
-		Category:   data.Category,
-		Price:      data.Price,
+func (data *Schedule) toCore() schedule.ScheduleCore {
+	return schedule.ScheduleCore{
+		ID:          data.ID,
+		FieldID:     data.FieldID,
+		Category:    data.Field.Category,
+		Day:         data.Day,
+		Start_hours: data.Start_hours,
+		End_hours:   data.End_hours,
 	}
 }
 
-func toCoreList(data []Field) []field.FieldCore {
-	var list []field.FieldCore
+func toCoreList(data []Schedule) []schedule.ScheduleCore {
+	var list []schedule.ScheduleCore
 	for _, v := range data {
 		list = append(list, v.toCore())
 	}
