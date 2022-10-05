@@ -6,6 +6,24 @@ type FieldCore struct {
 	Name_venue string
 	Category   string
 	Price      uint
+	Schedule   Schedule
+}
+
+type Schedule struct {
+	ID              uint
+	FieldID         uint
+	Day             string
+	Start_hours     uint
+	End_hours       uint
+	SchedulesDetail []ScheduleDetail
+}
+
+type ScheduleDetail struct {
+	ID              uint
+	ScheduleID      uint
+	Start_hours     uint
+	End_hours       uint
+	Status_schedule string
 }
 
 type UsecaseInterface interface {
