@@ -60,7 +60,7 @@ func (repo *venueData) SelectVenueById(id int) (venue.VenueCore, error) {
 	var dataVenue Venue
 	dataVenue.ID = uint(id)
 
-	tx := repo.db.Where("id = ?", id).Preload("User").First(&dataVenue)
+	tx := repo.db.Where("id = ?", id).Preload("User").Preload("FotoVenues").First(&dataVenue)
 
 	if tx.Error != nil {
 		return venue.VenueCore{}, tx.Error
