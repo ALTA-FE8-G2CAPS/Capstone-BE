@@ -22,6 +22,8 @@ func New(e *echo.Echo, usecase schedule.UsecaseInterface) {
 	e.POST("/schedules", handler.PostSchedule, middlewares.JWTMiddleware())
 	e.GET("/schedules", handler.GetSchedule, middlewares.JWTMiddleware())
 	e.GET("/schedules/:id", handler.GetScheduleId, middlewares.JWTMiddleware())
+	e.DELETE("/schedules/:id", handler.DeleteSchedule, middlewares.JWTMiddleware())
+	e.PUT("/schedules/:id", handler.UpdateSchedule, middlewares.JWTMiddleware())
 
 }
 
@@ -79,5 +81,58 @@ func (delivery *scheduleDelivery) GetScheduleId(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, helper.Success_DataResp("success get data", FromCore(result)))
+
+}
+
+func (delivery *scheduleDelivery) DeleteSchedule(c echo.Context) error {
+
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	row, err := delivery.scheduleUsecase.DeleteSchedule(id_conv)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail delete data"))
+	}
+	if row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("rows affected 0, fail delete data"))
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("success delete data"))
+}
+
+func (delivery *scheduleDelivery) UpdateSchedule(c echo.Context) error {
+
+	var scheduleRequestdata ScheduleRequest
+
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	rowDel, errDel := delivery.scheduleUsecase.DeleteSchedule(id_conv)
+	if errDel != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail delete data"))
+	}
+	if rowDel != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("rows affected 0, fail delete data"))
+	}
+
+	errBind := c.Bind(&scheduleRequestdata)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail bind data"))
+	}
+
+	row, err := delivery.scheduleUsecase.PostData(ToCore(scheduleRequestdata))
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail input"))
+	}
+
+	if row == 0 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail input data"))
+	}
+
+	return c.JSON(http.StatusOK, helper.Success_Resp("success input"))
 
 }
