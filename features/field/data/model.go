@@ -27,8 +27,8 @@ type Schedule struct {
 type ScheduleDetail struct {
 	gorm.Model
 	ScheduleID      uint `gorm:"foreignkey:ScheduleID"`
-	Start_hours     uint
-	End_hours       uint
+	Start_hours     string
+	End_hours       string
 	Status_schedule string
 }
 

@@ -18,9 +18,9 @@ type Schedule struct {
 type ScheduleDetail struct {
 	gorm.Model
 	ScheduleID      uint `gorm:"foreignkey:ScheduleID"`
-	Start_hours     uint
-	End_hours       uint
-	Status_schedule string
+	Start_hours     string
+	End_hours       string
+	Status_schedule string `gorm:"default:Available"`
 }
 type Field struct {
 	gorm.Model
@@ -79,12 +79,23 @@ func fromCore(data schedule.ScheduleCore) Schedule {
 
 func (data *Schedule) toCore() schedule.ScheduleCore {
 	return schedule.ScheduleCore{
-		ID:          data.ID,
-		FieldID:     data.FieldID,
-		Category:    data.Field.Category,
-		Day:         data.Day,
-		Start_hours: data.Start_hours,
-		End_hours:   data.End_hours,
+		ID:             data.ID,
+		FieldID:        data.FieldID,
+		Category:       data.Field.Category,
+		Day:            data.Day,
+		Start_hours:    data.Start_hours,
+		End_hours:      data.End_hours,
+		ScheduleDetail: toCoreListScheduleDetail(data.ScheduleDetails),
+	}
+}
+
+func (data *ScheduleDetail) toCoreScheduleDetail() schedule.ScheduleDetailCore {
+	return schedule.ScheduleDetailCore{
+		ID:              data.ID,
+		ScheduleID:      data.ScheduleID,
+		Start_hours:     data.Start_hours,
+		End_hours:       data.End_hours,
+		Status_schedule: data.Status_schedule,
 	}
 }
 
@@ -92,6 +103,13 @@ func toCoreList(data []Schedule) []schedule.ScheduleCore {
 	var list []schedule.ScheduleCore
 	for _, v := range data {
 		list = append(list, v.toCore())
+	}
+	return list
+}
+func toCoreListScheduleDetail(data []ScheduleDetail) []schedule.ScheduleDetailCore {
+	var list []schedule.ScheduleDetailCore
+	for _, v := range data {
+		list = append(list, v.toCoreScheduleDetail())
 	}
 	return list
 }
