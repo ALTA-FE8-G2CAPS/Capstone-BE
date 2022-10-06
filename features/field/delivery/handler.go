@@ -85,17 +85,13 @@ func (delivery *fieldDelivery) GetFieldId(c echo.Context) error {
 }
 
 func (delivery *fieldDelivery) DeleteField(c echo.Context) error {
-	user_id := middlewares.ExtractToken(c)
-	if user_id == 0 {
-		return c.JSON(http.StatusUnauthorized, helper.Fail_Resp("unauthorized"))
-	}
 
 	id := c.Param("id")
 	id_conv, err_conv := strconv.Atoi(id)
 	if err_conv != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
 	}
-	row, err := delivery.fieldUsecase.DeleteField(user_id, id_conv)
+	row, err := delivery.fieldUsecase.DeleteField(id_conv)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail delete data"))
 	}
@@ -106,10 +102,6 @@ func (delivery *fieldDelivery) DeleteField(c echo.Context) error {
 }
 
 func (delivery *fieldDelivery) UpdateField(c echo.Context) error {
-	user_id := middlewares.ExtractToken(c)
-	if user_id == -1 {
-		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail operation"))
-	}
 
 	id := c.Param("id")
 	id_conv, err_conv := strconv.Atoi(id)
@@ -124,9 +116,8 @@ func (delivery *fieldDelivery) UpdateField(c echo.Context) error {
 	}
 
 	fieldUpdateCore := ToCore(fieldUpdate)
-	fieldUpdateCore.ID = uint(id_conv)
 
-	row, err := delivery.fieldUsecase.PutData(fieldUpdateCore, user_id)
+	row, err := delivery.fieldUsecase.PutData(fieldUpdateCore, id_conv)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data"))

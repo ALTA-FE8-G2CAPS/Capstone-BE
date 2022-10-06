@@ -43,8 +43,8 @@ func (usecase *FieldUsecase) GetFieldById(id int) (field.FieldCore, error) {
 	return result, nil
 }
 
-func (usecase *FieldUsecase) DeleteField(user_id, field_id int) (row int, err error) {
-	result, err := usecase.fieldData.DeleteField(user_id, field_id)
+func (usecase *FieldUsecase) DeleteField(field_id int) (row int, err error) {
+	result, err := usecase.fieldData.DeleteField(field_id)
 	if err != nil {
 		return -1, err
 	}
