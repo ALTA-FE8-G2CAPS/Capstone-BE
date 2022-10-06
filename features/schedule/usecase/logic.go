@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"capstone-project/features/schedule"
+	"capstone-project/utils/helper"
 	"errors"
 )
 
@@ -15,11 +16,18 @@ func New(data schedule.DataInterface) schedule.UsecaseInterface {
 	}
 }
 
-func (usecase *scheduleUsecase) PostData(data schedule.ScheduleCore) (row int, err error) {
-	if data.FieldID == 0 || data.Day == "" || data.Start_hours == "" || data.End_hours == "" {
+func (usecase *scheduleUsecase) PostData(dataSchedule schedule.ScheduleCore) (row int, err error) {
+	if dataSchedule.FieldID == 0 || dataSchedule.Day == "" || dataSchedule.Start_hours == "" || dataSchedule.End_hours == "" {
 		return -1, errors.New("data tidak boleh kosong")
 	}
-	row, err = usecase.scheduleData.InsertData(data)
+
+	var schedule_id int
+	schedule_id, row, err = usecase.scheduleData.InsertData(dataSchedule)
+	if err != nil {
+		return -1, err
+	}
+	deteilShceduleTime := helper.GenerateSchedule(schedule_id, dataSchedule.Start_hours, dataSchedule.End_hours)
+	row, err = usecase.scheduleData.InsertDetailSchedule(schedule_id, deteilShceduleTime)
 	if err != nil {
 		return -1, err
 	}

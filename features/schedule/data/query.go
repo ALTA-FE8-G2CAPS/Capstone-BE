@@ -17,12 +17,12 @@ func New(db *gorm.DB) schedule.DataInterface {
 
 }
 
-func (repo *scheduleData) InsertData(data schedule.ScheduleCore) (int, error) {
+func (repo *scheduleData) InsertData(data schedule.ScheduleCore) (int, int, error) {
 	newSchedule := fromCore(data)
 
 	tx := repo.db.Create(&newSchedule)
 	if tx.Error != nil {
-		return 0, tx.Error
+		return 0, 0, tx.Error
 	}
 
 	// token, errToken := middlewares.CreateToken(int(newUser.ID))
@@ -30,6 +30,14 @@ func (repo *scheduleData) InsertData(data schedule.ScheduleCore) (int, error) {
 	// 	return "", -1, errToken
 	// }
 
+	return int(newSchedule.ID), int(tx.RowsAffected), nil
+}
+
+func (repo *scheduleData) InsertDetailSchedule(schedule_id int, dataGenerete []map[string]interface{}) (int, error) {
+	tx := repo.db.Model(&ScheduleDetail{}).Create(dataGenerete)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
 	return int(tx.RowsAffected), nil
 }
 
@@ -37,14 +45,14 @@ func (repo *scheduleData) SelectAllSchedule(field_id int) ([]schedule.ScheduleCo
 	var dataSchedule []Schedule
 
 	if field_id != 0 {
-		tx := repo.db.Where("field_id = ?", field_id).Preload("Field").Find(&dataSchedule)
-		// fmt.Println(dataField[0].Venue.Name_venue)
+		tx := repo.db.Where("field_id = ?", field_id).Preload("Field").Preload("ScheduleDetails").Find(&dataSchedule)
+		// fmt.Println(dataSchedule[0].ScheduleDetails[0].Start_hours)
 
 		if tx.Error != nil {
 			return []schedule.ScheduleCore{}, tx.Error
 		}
 	} else {
-		tx := repo.db.Preload("Field").Find(&dataSchedule)
+		tx := repo.db.Preload("Field").Preload("ScheduleDetails").Find(&dataSchedule)
 
 		if tx.Error != nil {
 			return []schedule.ScheduleCore{}, tx.Error

@@ -4,7 +4,6 @@ import (
 	"capstone-project/features/schedule"
 	"capstone-project/middlewares"
 	"capstone-project/utils/helper"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -27,21 +26,20 @@ func New(e *echo.Echo, usecase schedule.UsecaseInterface) {
 }
 
 func (delivery *scheduleDelivery) PostSchedule(c echo.Context) error {
-
 	var scheduleRequestdata ScheduleRequest
+
 	errBind := c.Bind(&scheduleRequestdata)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail bind data"))
 	}
 
 	row, err := delivery.scheduleUsecase.PostData(ToCore(scheduleRequestdata))
-	fmt.Println(err)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail input"))
 	}
 
-	if row != 1 {
+	if row == 0 {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail input data"))
 	}
 

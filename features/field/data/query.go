@@ -35,11 +35,11 @@ func (repo *fieldData) InsertData(data field.FieldCore) (int, error) {
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *fieldData) SelectAllField(user_id int) ([]field.FieldCore, error) {
+func (repo *fieldData) SelectAllField(venue_id int) ([]field.FieldCore, error) {
 	var dataField []Field
 
-	if user_id != 0 {
-		tx := repo.db.Where("user_id = ?", user_id).Preload("Venue").Find(&dataField)
+	if venue_id != 0 {
+		tx := repo.db.Where("veneu_is = ?", venue_id).Preload("Venue").Find(&dataField)
 		fmt.Println(dataField[0].Venue.Name_venue)
 
 		if tx.Error != nil {
