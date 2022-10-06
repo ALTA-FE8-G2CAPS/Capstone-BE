@@ -73,5 +73,5 @@ type DataInterface interface {
 }
 
 type UsecaseInterface interface {
-	CreatePayment(idUser int) (int, int, error)
+	CreatePayment(userId int) (int, int, error)
 }

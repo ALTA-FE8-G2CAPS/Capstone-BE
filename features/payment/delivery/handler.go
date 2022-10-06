@@ -80,9 +80,6 @@ func (delivery *paymentDelivery) PostPayment(c echo.Context) error {
 			},
 			BankTransfer: &coreapi.BankTransferDetails{
 				Bank: midtrans.BankPermata,
-				Permata: &coreapi.PermataBankTransferDetail{
-					RecipientName: "lamiapp",
-				},
 			},
 		}
 	case typeName == "mandiri":
@@ -90,6 +87,9 @@ func (delivery *paymentDelivery) PostPayment(c echo.Context) error {
 			TransactionDetails: midtrans.TransactionDetails{
 				OrderID:  strconv.Itoa(bookingOrder),
 				GrossAmt: int64(totalPrice),
+			},
+			BankTransfer: &coreapi.BankTransferDetails{
+				Bank: midtrans.BankMandiri,
 			},
 		}
 	default:

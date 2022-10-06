@@ -10,9 +10,9 @@ type paymentData struct {
 	db *gorm.DB
 }
 
-func New(conn *gorm.DB) payment.DataInterface {
+func New(db *gorm.DB) payment.DataInterface {
 	return &paymentData{
-		db: conn,
+		db: db,
 	}
 }
 
