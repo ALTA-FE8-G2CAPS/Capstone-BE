@@ -22,8 +22,8 @@ type UsecaseInterface interface {
 	GetAllSchedule(field_id int) (data []ScheduleCore, err error)
 	GetScheduleById(id int) (data ScheduleCore, err error)
 	PostData(dataSchedule ScheduleCore) (row int, err error)
-	// PutData(data FieldCore, user_id int) (row int, err error)
-	// DeleteField(user_id, field_id int) (row int, err error)
+	// PutData(data ScheduleCore, schedule_id int) (row int, err error)
+	DeleteSchedule(schedule_id int) (row int, err error)
 }
 
 type DataInterface interface {
@@ -31,6 +31,6 @@ type DataInterface interface {
 	SelectScheduleById(id int) (data ScheduleCore, err error)
 	InsertData(dataSchedule ScheduleCore) (shcedule_id, row int, err error)
 	InsertDetailSchedule(schedule_id int, dataGenerete []map[string]interface{}) (row int, err error)
-	// UpdateField(data FieldCore, user_id int) (row int, err error)
-	// DeleteField(user_id, field_id int) (row int, err error)
+	// UpdateSchedule(data ScheduleCore, schedule_id int) (shcedule_id, row int, err error)
+	DeleteSchedule(schedule_id int) (row int, err error)
 }

@@ -2,6 +2,7 @@ package data
 
 import (
 	"capstone-project/features/schedule"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -76,3 +77,30 @@ func (repo *scheduleData) SelectScheduleById(id int) (schedule.ScheduleCore, err
 	return dataScheduleCore, nil
 
 }
+
+func (repo *scheduleData) DeleteSchedule(schedule_id int) (int, error) {
+	var dataSchedule Schedule
+
+	tx := repo.db.Where("id = ?", schedule_id).Unscoped().Delete(&dataSchedule)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return 0, errors.New("delete failed, rows affected 0")
+	}
+	return int(tx.RowsAffected), nil
+}
+
+// func (repo *scheduleData) UpdateSchedule(data schedule.ScheduleCore, schedule_id int) (int, int, error) {
+// 	rowDel, errDel := repo.DeleteSchedule(schedule_id)
+// 	if errDel != nil {
+// 		return 0, 0, errDel
+// 	}
+// 	return rowDel, 0, nil
+
+// 	// schedule_id, row, errPost := repo.InsertData(data)
+// 	// if errPost != nil {
+// 	// 	return 0, 0, errPost
+// 	// }
+// 	// return schedule_id, row, nil
+// }

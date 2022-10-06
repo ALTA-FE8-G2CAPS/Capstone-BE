@@ -50,7 +50,7 @@ func FromCoreScheduleDetailList(data []schedule.ScheduleDetailCore) []ScheduleDe
 		scheduleDetail.ScheduleID = v.ScheduleID
 		scheduleDetail.Start_hours = v.Start_hours
 		scheduleDetail.End_hours = v.End_hours
-		scheduleDetail.Status_schedule = v.Start_hours
+		scheduleDetail.Status_schedule = v.Status_schedule
 		list = append(list, scheduleDetail)
 	}
 	return list
