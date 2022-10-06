@@ -39,7 +39,7 @@ func (repo *fieldData) SelectAllField(venue_id int) ([]field.FieldCore, error) {
 	var dataField []Field
 
 	if venue_id != 0 {
-		tx := repo.db.Where("veneu_id = ?", venue_id).Preload("Venue").Find(&dataField)
+		tx := repo.db.Where("venue_id = ?", venue_id).Preload("Venue").Find(&dataField)
 		fmt.Println(dataField[0].Venue.Name_venue)
 
 		if tx.Error != nil {
