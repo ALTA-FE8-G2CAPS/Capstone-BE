@@ -3,6 +3,7 @@ package migration
 import (
 	bookingModel "capstone-project/features/booking/data"
 	fieldModel "capstone-project/features/field/data"
+	reviewModel "capstone-project/features/review/data"
 	scheduleModel "capstone-project/features/schedule/data"
 	userModel "capstone-project/features/user/data"
 	venueModel "capstone-project/features/venue/data"
@@ -20,5 +21,6 @@ func InitMigrate(db *gorm.DB) {
 	db.AutoMigrate(&bookingModel.Booking{})
 	db.AutoMigrate(&scheduleModel.Schedule{})
 	db.AutoMigrate(&scheduleModel.ScheduleDetail{})
+	db.AutoMigrate(&reviewModel.Review{})
 
 }

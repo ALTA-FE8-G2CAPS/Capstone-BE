@@ -21,6 +21,10 @@ import (
 	scheduleDelivery "capstone-project/features/schedule/delivery"
 	scheduleUsecase "capstone-project/features/schedule/usecase"
 
+	reviewData "capstone-project/features/review/data"
+	reviewDelivery "capstone-project/features/review/delivery"
+	reviewUsecase "capstone-project/features/review/usecase"
+
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -45,4 +49,8 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 	scheduleDataFactory := scheduleData.New(db)
 	scheduleUsecaseFactory := scheduleUsecase.New(scheduleDataFactory)
 	scheduleDelivery.New(e, scheduleUsecaseFactory)
+
+	reviewDataFactory := reviewData.New(db)
+	reviewUsecaseFactory := reviewUsecase.New(reviewDataFactory)
+	reviewDelivery.New(e, reviewUsecaseFactory)
 }
