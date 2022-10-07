@@ -12,7 +12,7 @@ import (
 )
 
 func SendGmailNotif(email, field, venue, cost, qty, amount, total, totalnotax, tax string) {
-	template, _ := filepath.Abs("./utils/helper/templates/email-notif.html")
+	template, _ := filepath.Abs("./utils/helper/templates/notif-email.html")
 	subject := "Payment Notification"
 	templateData := BodyEmail{
 		FIELD:      field,
@@ -34,7 +34,7 @@ func SendGmailNotif(email, field, venue, cost, qty, amount, total, totalnotax, t
 func SendEmail(to string, subject string, result string) error {
 	const CONFIG_SMTP_HOST = "smtp.gmail.com"
 	const CONFIG_SMTP_PORT = 587
-	const CONFIG_SENDER_NAME = "Segoro App <muhammadadityogunawan@gmail.com>"
+	const CONFIG_SENDER_NAME = "Segoro App <segoroapp@gmail.com>"
 	CONFIG_AUTH_EMAIL := os.Getenv("EMAIL")
 	CONFIG_AUTH_PASSWORD := os.Getenv("EMAIL_PASSWORD")
 	m := gomail.NewMessage()

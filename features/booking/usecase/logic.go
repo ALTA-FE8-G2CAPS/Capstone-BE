@@ -55,6 +55,8 @@ func (usecase *BookingUsecase) PostData(data booking.BookingCore) (row int, err 
 	if err != nil {
 		return -1, err
 	}
+
+	// helper.SendGmailNotif("muhammadadityogunawan@gmail.com", "lapangan volly", "gor bung karno", "50000", "1", "50000", "50000", "50000", "0")
 	return row, err
 }
 
