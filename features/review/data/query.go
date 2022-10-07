@@ -30,7 +30,7 @@ func (repo *reviewData) InsertReview(data review.ReviewCore) (int, error) {
 func (repo *reviewData) SelectReviewById(venue_id int) ([]review.ReviewCore, error) {
 	var dataReview []Review
 
-	tx := repo.db.Where("venue_id = ?", venue_id).Find(&dataReview)
+	tx := repo.db.Where("venue_id = ?", venue_id).Preload("User").Preload("Venue").Find(&dataReview)
 
 	if tx.Error != nil {
 		return []review.ReviewCore{}, tx.Error

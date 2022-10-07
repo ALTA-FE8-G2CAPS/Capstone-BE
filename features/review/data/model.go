@@ -8,14 +8,13 @@ import (
 
 type Review struct {
 	gorm.Model
-	Name_user   string
-	UserID      uint
-	Nama_venue  string
-	VenueID     uint
+	UserID      uint `gorm:"foreignKey:userID"`
+	VenueID     uint `gorm:"foreignKey:VenueID"`
 	Rate        uint
 	Feedback    string
 	Foto_review string
 	Venue       Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	User        User  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type Venue struct {
@@ -59,9 +58,7 @@ type User struct {
 
 func fromCore(data review.ReviewCore) Review {
 	return Review{
-		Name_user:   data.Name_user,
 		UserID:      data.UserID,
-		Nama_venue:  data.Nama_venue,
 		VenueID:     data.VenueID,
 		Rate:        data.Rate,
 		Feedback:    data.Feedback,
@@ -72,10 +69,10 @@ func fromCore(data review.ReviewCore) Review {
 func (data *Review) toCore() review.ReviewCore {
 	return review.ReviewCore{
 		ID:          data.ID,
-		Name_user:   data.Name_user,
 		UserID:      data.UserID,
-		Nama_venue:  data.Nama_venue,
+		Name_user:   data.User.Name_User,
 		VenueID:     data.VenueID,
+		Nama_venue:  data.Venue.Name_venue,
 		Rate:        data.Rate,
 		Feedback:    data.Feedback,
 		Foto_review: data.Foto_review,
