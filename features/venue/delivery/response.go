@@ -15,6 +15,7 @@ type VenueResponse struct {
 }
 
 type FotoVenue struct {
+	ID         uint   `json:"foto_venue_id"`
 	VenueID    uint   `json:"venue_id"`
 	Foto_Venue string `json:"foto_venue"`
 }
@@ -46,6 +47,7 @@ func FromCoreFotoList(data []venue.FotoVenue) []FotoVenue {
 	var list []FotoVenue
 	for _, v := range data {
 		var foto_venue FotoVenue
+		foto_venue.ID = v.ID
 		foto_venue.VenueID = v.VenueID
 		foto_venue.Foto_Venue = v.Foto_Venue
 		list = append(list, foto_venue)

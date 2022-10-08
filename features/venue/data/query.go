@@ -123,3 +123,24 @@ func (repo *venueData) UploadPhoto(data venue.FotoVenue) (row int, err error) {
 	}
 	return int(tx.RowsAffected), nil
 }
+
+func (repo *venueData) UpdatePhoto(data venue.FotoVenue, foto_venue_id int) (int, error) {
+	var PhotoUpdate FotoVenue
+	txOld := repo.db.Where("id = ?", foto_venue_id).First(&PhotoUpdate)
+	if txOld.Error != nil {
+		return 0, txOld.Error
+	}
+	if data.Foto_Venue != "" {
+		PhotoUpdate.Foto_venue = data.Foto_Venue
+	}
+	tx := repo.db.Where("id = ?", foto_venue_id).Save(&PhotoUpdate)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	if tx.RowsAffected != 1 {
+		return 0, errors.New("zero row affected, fail update")
+	}
+
+	return int(tx.RowsAffected), nil
+
+}

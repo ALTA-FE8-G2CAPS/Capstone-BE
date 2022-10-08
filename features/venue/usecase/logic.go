@@ -59,5 +59,13 @@ func (usecase *venueUsecase) PostPhoto(data venue.FotoVenue) (row int, err error
 	if err != nil {
 		return -1, err
 	}
-	return row, err
+	return row, nil
+}
+
+func (usecase *venueUsecase) PutPhoto(data venue.FotoVenue, foto_venue_id int) (int, error) {
+	row, err := usecase.venueData.UpdatePhoto(data, foto_venue_id)
+	if err != nil {
+		return -1, err
+	}
+	return row, nil
 }
