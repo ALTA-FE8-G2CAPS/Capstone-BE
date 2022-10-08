@@ -21,7 +21,7 @@ func (mock mockUserUsecase) InsertData(data user.UserCore) (row int, err error) 
 }
 
 func (mock mockUserUsecase) SelectAllUser() (data []user.UserCore, err error) {
-	return []user.UserCore{}, nil
+	return data, nil
 }
 
 func (mock mockUserUsecase) SelectUserById(id int) (data user.UserCore, err error) {
@@ -107,21 +107,128 @@ func TestGetUserById(t *testing.T) {
 
 func TestPostData(t *testing.T) {
 	t.Run("Test Logic Success", func(t *testing.T) {
-		data := user.UserCore{Name_User: "Jono", Email: "example@gmail.com", Password: "qwerty", Address_user: "Konohagakure"}
+		data := user.UserCore{Name_User: "Jono", Email: "example@gmail.com", Password: "qwerty", Address_user: "Konohagakure", Foto_user: "bucketS3.aws.com"}
 		userUsecase := NewUserUsecase(mockUserUsecase{})
 		result, err := userUsecase.PostData(data)
 		assert.Nil(t, result, err)
 	})
 	t.Run("Test Logic Failed", func(t *testing.T) {
-		data := user.UserCore{Name_User: "Jono", Email: "example@gmail.com", Password: "qwerty", Address_user: "Konohagakure"}
+		data := user.UserCore{Name_User: "Jono", Email: "", Password: "qwerty", Address_user: "Konohagakure", Foto_user: "bucketS3.aws.com"}
 		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
 		result, err := userUsecase.PostData(data)
 		assert.NotNil(t, result, err)
 	})
 	t.Run("Test Logic Failed when email is invalid", func(t *testing.T) {
-		data := user.UserCore{Name_User: "Jono", Email: "example", Password: "qwerty", Address_user: "Konohagakure"}
+		data := user.UserCore{Name_User: "Jono", Email: "example", Password: "qwerty", Address_user: "Konohagakure", Foto_user: "bucketS3.aws.com"}
 		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
 		result, err := userUsecase.PostData(data)
+		assert.NotNil(t, result, err)
+	})
+}
+
+func TestGetAllUser(t *testing.T) {
+	t.Run("Test Logic Success", func(t *testing.T) {
+		userUsecase := NewUserUsecase(mockUserUsecase{})
+		result, err := userUsecase.GetAllUser()
+		assert.Nil(t, err)
+		assert.Equal(t, 0, len(result))
+	})
+	t.Run("Test Logic Failed", func(t *testing.T) {
+		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
+		result, err := userUsecase.GetAllUser()
+		assert.NotNil(t, err)
+		assert.Equal(t, -1, len(result))
+	})
+}
+
+func TestPutData(t *testing.T) {
+	t.Run("Test Logic Success", func(t *testing.T) {
+		data := user.UserCore{Name_User: "Jono", Email: "example@gmail.com", Password: "qwerty", Address_user: "Konohagakure", Foto_user: "bucketS3.aws.com"}
+		userUsecase := NewUserUsecase(mockUserUsecase{})
+		result, err := userUsecase.PutData(data)
+		assert.Nil(t, result, err)
+	})
+	t.Run("Test Logic Failed", func(t *testing.T) {
+		data := user.UserCore{Name_User: "Jono", Email: "example@gmail.com", Password: "qwerty", Address_user: "Konohagakure", Foto_user: "bucketS3.aws.com"}
+		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
+		result, err := userUsecase.PutData(data)
+		assert.NotNil(t, result, err)
+	})
+}
+
+func TestDeleteUser(t *testing.T) {
+	t.Run("Test Logic Success", func(t *testing.T) {
+		id := 1
+		userUsecase := NewUserUsecase(mockUserUsecase{})
+		result, err := userUsecase.DeleteUser(id)
+		assert.Nil(t, result, err)
+	})
+	t.Run("Test Logic Failed", func(t *testing.T) {
+		id := 10
+		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
+		result, err := userUsecase.DeleteUser(id)
+		assert.NotNil(t, result, err)
+	})
+}
+
+func TestPostOwner(t *testing.T) {
+	t.Run("Test Logic Success", func(t *testing.T) {
+		data := user.Owner{UserID: uint(1), Foto_owner: "bucketS3.aws.com"}
+		userUsecase := NewUserUsecase(mockUserUsecase{})
+		result, err := userUsecase.PostOwner(data)
+		assert.Nil(t, result, err)
+	})
+	t.Run("Test Logic Failed", func(t *testing.T) {
+		data := user.Owner{UserID: uint(1), Foto_owner: ""}
+		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
+		result, err := userUsecase.PostOwner(data)
+		assert.NotNil(t, result, err)
+	})
+}
+
+func TestPostLogin(t *testing.T) {
+	t.Run("Test Logic Success", func(t *testing.T) {
+		data := user.UserCore{Email: "example@gmail.com", Password: "qwerty"}
+		userUsecase := NewUserUsecase(mockUserUsecase{})
+		result, err := userUsecase.PostLogin(data)
+		assert.Nil(t, result, err)
+	})
+	t.Run("Test Logic Failed", func(t *testing.T) {
+		data := user.UserCore{Email: "salah@gmail.com", Password: "salah"}
+		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
+		result, err := userUsecase.PostLogin(data)
+		assert.NotNil(t, result, err)
+	})
+}
+
+func TestGetVerificationRequest(t *testing.T) {
+	t.Run("Test Logic Success", func(t *testing.T) {
+		userUsecase := NewUserUsecase(mockUserUsecase{})
+		result, err := userUsecase.GetVerificationRequest()
+		assert.Nil(t, err)
+		assert.Equal(t, 0, len(result))
+	})
+	t.Run("Test Logic Failed", func(t *testing.T) {
+		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
+		result, err := userUsecase.GetVerificationRequest()
+		assert.NotNil(t, err)
+		assert.Equal(t, -1, len(result))
+	})
+}
+
+func TestAdminApprove(t *testing.T) {
+	t.Run("Test Logic Success", func(t *testing.T) {
+		var user user.UserCore
+		user.ID = 1
+		userUsecase := NewUserUsecase(mockUserUsecase{})
+		result, err := userUsecase.AdminApprove(user)
+		assert.Nil(t, result, err)
+	})
+	t.Run("Test Logic Failed", func(t *testing.T) {
+		var user user.UserCore
+		user.ID = 10
+		userUsecase := NewUserUsecase(mockUserUsecaseFailed{})
+		result, err := userUsecase.AdminApprove(user)
 		assert.NotNil(t, result, err)
 	})
 }
