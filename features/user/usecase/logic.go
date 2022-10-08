@@ -9,7 +9,7 @@ type userUsecase struct {
 	userData user.DataInterface
 }
 
-func New(data user.DataInterface) user.UsecaseInterface {
+func NewUserUsecase(data user.DataInterface) user.UsecaseInterface {
 	return &userUsecase{
 		data,
 	}
@@ -18,6 +18,10 @@ func New(data user.DataInterface) user.UsecaseInterface {
 func (usecase *userUsecase) PostData(data user.UserCore) (row int, err error) {
 	if data.Name_User == "" || data.Email == "" || data.Password == "" || data.Address_user == "" {
 		return -1, errors.New("data tidak boleh kosong")
+	}
+	errEmailFormat := emailFormatValidation(data.Email)
+	if errEmailFormat != nil {
+		return -1, errors.New(errEmailFormat.Error())
 	}
 	row, err = usecase.userData.InsertData(data)
 	if err != nil {
