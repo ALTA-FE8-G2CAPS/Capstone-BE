@@ -11,19 +11,17 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendGmailNotif(email, user, field, venue, cost, qty, amount, total, totalnotax, tax string) {
+func SendGmailNotif(email, user, field, venue string, cost, qty, amount, total, totalnotax, tax int) {
 	template, _ := filepath.Abs("./utils/helper/templates/notif-email.html")
 	subject := "Payment Notification"
 	templateData := BodyEmail{
-		NAMA_USER:  user,
-		FIELD:      field,
-		VENUE:      venue,
-		COST:       cost,
-		QTY:        qty,
-		AMOUNT:     amount,
-		TOTAL:      total,
-		TOTALNOTAX: totalnotax,
-		TAX:        tax,
+		NAMA_USER: user,
+		FIELD:     field,
+		VENUE:     venue,
+		COST:      cost,
+		QTY:       qty,
+		AMOUNT:    Amount(cost, qty),
+		TOTAL:     total,
 	}
 	result, errParse := ParseTemplate(template, templateData)
 	fmt.Println(errParse)
@@ -65,14 +63,21 @@ func ParseTemplate(templateFileName string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
+func Amount(cost, qty int) int {
+	var amount BodyEmail
+	var total int
+	amount.COST = cost
+	amount.QTY = qty
+	total = amount.COST * amount.QTY
+	return total
+}
+
 type BodyEmail struct {
-	NAMA_USER  string
-	FIELD      string
-	VENUE      string
-	COST       string
-	QTY        string
-	AMOUNT     string
-	TOTAL      string
-	TOTALNOTAX string
-	TAX        string
+	NAMA_USER string
+	FIELD     string
+	VENUE     string
+	COST      int
+	QTY       int
+	AMOUNT    int
+	TOTAL     int
 }
