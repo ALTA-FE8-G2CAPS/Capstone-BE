@@ -31,7 +31,7 @@ import (
 
 func InitFactory(e *echo.Echo, db *gorm.DB) {
 	userDataFactory := userData.New(db)
-	userUsecaseFactory := userUsecase.New(userDataFactory)
+	userUsecaseFactory := userUsecase.NewUserUsecase(userDataFactory)
 	userDelivery.New(e, userUsecaseFactory)
 
 	venueDataFactory := venueData.New(db)

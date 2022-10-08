@@ -68,7 +68,7 @@ func Amount(cost, qty int) int {
 	var total int
 	amount.COST = cost
 	amount.QTY = qty
-	total = amount.COST * amount.QTY
+	total = cost * qty
 	return total
 }
 
