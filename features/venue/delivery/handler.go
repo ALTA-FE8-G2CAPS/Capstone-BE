@@ -28,6 +28,7 @@ func New(e *echo.Echo, usecase venue.UsecaseInterface) {
 	e.DELETE("/venues/:id", handler.DeleteVenue, middlewares.JWTMiddleware())
 	e.PUT("/venues/:id", handler.UpdateVenue, middlewares.JWTMiddleware())
 	e.POST("venues/foto/:id", handler.PostPhoto, middlewares.JWTMiddleware())
+	e.PUT("venues/foto/:id", handler.UpdatePhoto, middlewares.JWTMiddleware())
 
 }
 
@@ -197,4 +198,56 @@ func (delivery *venueDelivery) PostPhoto(c echo.Context) error {
 		return c.JSON(400, map[string]interface{}{"message": "failed to upload photo"})
 	}
 	return c.JSON(http.StatusOK, helper.Success_Resp("success upload photo"))
+}
+
+func (delivery *venueDelivery) UpdatePhoto(c echo.Context) error {
+
+	id := c.Param("id")
+	id_conv, err_conv := strconv.Atoi(id)
+
+	if err_conv != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
+	}
+	var photoUpdate Foto_venueRequest
+	errBind := c.Bind(&photoUpdate)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail bind user data"))
+	}
+
+	photoUpdateCore := ToCoreFoto_venue(photoUpdate)
+	photoUpdateCore.ID = uint(id_conv)
+
+	dataFoto, infoFoto, fotoerr := c.Request().FormFile("foto_venue")
+	if fotoerr != http.ErrMissingFile || fotoerr == nil {
+		format, errf := helper.CheckFile(infoFoto.Filename)
+		if errf != nil {
+			return c.JSON(http.StatusBadRequest, helper.Fail_Resp("Format Error"))
+		}
+		//checksize
+		err_image_size := helper.CheckSize(infoFoto.Size)
+		if err_image_size != nil {
+			return c.JSON(http.StatusBadRequest, err_image_size)
+		}
+		//rename
+		waktu := fmt.Sprintf("%v", time.Now())
+		imageName := strconv.Itoa(int(photoUpdate.VenueID)) + "_" + "photo" + waktu + "." + format
+
+		imageaddress, errupload := helper.UploadFileToS3(config.FolderName, imageName, config.FileType, dataFoto)
+		if errupload != nil {
+			return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail to upload file"))
+		}
+
+		photoUpdateCore.Foto_Venue = imageaddress
+
+	}
+	row, err := delivery.venueUsecase.PutPhoto(photoUpdateCore, id_conv)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail update data"))
+	}
+
+	if row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("update row affected is not 1"))
+	}
+	return c.JSON(http.StatusOK, helper.Success_Resp("success update data"))
 }

@@ -88,6 +88,7 @@ func toCoreFotoList(dataVenue []FotoVenue) []venue.FotoVenue {
 
 	for key := range dataVenue {
 		var foto_venue venue.FotoVenue
+		foto_venue.ID = dataVenue[key].ID
 		foto_venue.VenueID = dataVenue[key].VenueID
 		foto_venue.Foto_Venue = dataVenue[key].Foto_venue
 		dataCore = append(dataCore, foto_venue)
