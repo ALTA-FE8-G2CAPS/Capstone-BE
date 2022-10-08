@@ -11,10 +11,11 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendGmailNotif(email, field, venue, cost, qty, amount, total, totalnotax, tax string) {
+func SendGmailNotif(email, user, field, venue, cost, qty, amount, total, totalnotax, tax string) {
 	template, _ := filepath.Abs("./utils/helper/templates/notif-email.html")
 	subject := "Payment Notification"
 	templateData := BodyEmail{
+		NAMA_USER:  user,
 		FIELD:      field,
 		VENUE:      venue,
 		COST:       cost,
@@ -65,6 +66,7 @@ func ParseTemplate(templateFileName string, data interface{}) (string, error) {
 }
 
 type BodyEmail struct {
+	NAMA_USER  string
 	FIELD      string
 	VENUE      string
 	COST       string
