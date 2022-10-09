@@ -15,6 +15,7 @@ func main() {
 	cfg := config.GetConfig()
 	db := mysql.InitMysqlDB(cfg)
 	e := echo.New()
+	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
