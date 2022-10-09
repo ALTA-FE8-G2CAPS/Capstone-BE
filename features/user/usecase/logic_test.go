@@ -83,30 +83,31 @@ func TestInsertData(t *testing.T) {
 
 func TestLogin(t *testing.T) {
 	repo := new(mocks.UserData)
-	returnData := user.UserCore{
-		ID:        1,
-		Name_User: "Jono",
-		Email:     "example@gmail.com",
-		Password:  "qwerty",
-	}
-	t.Run("Success Login", func(t *testing.T) {
-		repo.On("PostLogin", mock.Anything).Return(returnData, nil).Once()
-
+	t.Run("Test Login Success", func(t *testing.T) {
 		usecase := NewUserUsecase(repo)
-		resultData, err := usecase.PostLogin(returnData)
-		assert.NoError(t, err)
-		assert.Equal(t, resultData, returnData.ID)
-		repo.AssertExpectations(t)
+		newUser := user.UserCore{
+			ID:        1,
+			Name_User: "Jono",
+			Email:     "example@gmail.id",
+			Password:  "qwerty",
+		}
+		resultToken, err := usecase.PostLogin(newUser)
+		assert.Nil(t, err)
+		assert.NotNil(t, resultToken)
+		assert.Equal(t, 1, newUser.ID)
 	})
 
-	t.Run("Failed Login", func(t *testing.T) {
-		repo.On("PostLogin", mock.Anything).Return(user.UserCore{}, nil).Once()
-
+	t.Run("Test Login Failed", func(t *testing.T) {
 		usecase := NewUserUsecase(repo)
-		resultData, err := usecase.PostLogin(returnData)
-		assert.Error(t, err)
-		assert.Equal(t, resultData, returnData.ID)
-		repo.AssertExpectations(t)
+		newUser := user.UserCore{
+			ID:        0,
+			Name_User: "Jono",
+			Email:     "example@gmail.com",
+			Password:  "qwerty",
+		}
+		resultToken, err := usecase.PostLogin(newUser)
+		assert.NotNil(t, err)
+		assert.Equal(t, "", resultToken)
 	})
 }
 
