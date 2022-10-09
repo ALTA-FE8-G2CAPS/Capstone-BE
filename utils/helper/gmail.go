@@ -13,7 +13,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendGmailNotif(email, user, field, invoice, venue string, cost, qty, amount, order_id, total, totalnotax, tax int) error {
+func SendGmailNotif(email, user, field, invoice, venue string, amount uint, qty, total int, cost uint) error {
 
 	template, _ := filepath.Abs("./utils/helper/templates/notif-email.html")
 	subject := "Payment Notification"
@@ -24,8 +24,7 @@ func SendGmailNotif(email, user, field, invoice, venue string, cost, qty, amount
 		INVOICE:   invoice,
 		COST:      cost,
 		QTY:       qty,
-		ORDERID:   order_id,
-		AMOUNT:    Amount(cost, qty),
+		AMOUNT:    amount,
 		DATE:      time.Now().Format("2006-01-02"),
 		TOTAL:     total,
 	}
@@ -70,24 +69,15 @@ func ParseTemplate(templateFileName string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func Amount(cost, qty int) int {
-	var amount BodyEmail
-	var total int
-	amount.COST = cost
-	amount.QTY = qty
-	total = cost * qty
-	return total
-}
-
 type BodyEmail struct {
 	NAMA_USER string
 	FIELD     string
 	VENUE     string
 	INVOICE   string
 	ORDERID   int
-	COST      int
+	COST      uint
 	QTY       int
-	AMOUNT    int
+	AMOUNT    uint
 	TOTAL     int
 	DATE      string
 }

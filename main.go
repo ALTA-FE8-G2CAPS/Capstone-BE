@@ -7,8 +7,9 @@ import (
 	"capstone-project/migration"
 	"capstone-project/utils/database/mysql"
 
-	"fmt"
 	"time"
+
+	"fmt"
 
 	"github.com/go-co-op/gocron"
 	"github.com/labstack/echo/v4"

@@ -4,6 +4,7 @@ import (
 	"capstone-project/features/booking"
 	field "capstone-project/features/field"
 	schedule "capstone-project/features/schedule"
+	"capstone-project/utils/helper"
 
 	"errors"
 
@@ -57,6 +58,7 @@ func (usecase *BookingUsecase) PostData(data booking.BookingCore) (row int, err 
 	newBooking.ScheduleDetailID = data.ScheduleDetailID
 	newBooking.Start_hours = data.Start_hours
 	newBooking.End_Hours = data.End_Hours
+	newBooking.Price = data.Price
 	newBooking.Total_price = dataField.Price
 	newBooking.Payment_method = data.Payment_method
 	newBooking.TransactionID = data.TransactionID
@@ -86,7 +88,8 @@ func (usecase *BookingUsecase) AddPayment(data booking.BookingCore, booking_id i
 	if err != nil {
 		return -1, err
 	}
-	// helper.SendGmailNotif("muhammadadityogunawan@gmail.com", "lapangan volly", "gor bung karno", "50000", "1", "50000", "50000", "50000", "0")
+	dataBooking, _ := usecase.bookingData.SelectBookingById(booking_id)
+	helper.SendGmailNotif(dataBooking.Email, dataBooking.Name_User, dataBooking.Category, dataBooking.OrderID, dataBooking.Nama_venue, dataBooking.Total_price, 1, int(dataBooking.Total_price), dataBooking.Price)
 	return row, nil
 }
 
