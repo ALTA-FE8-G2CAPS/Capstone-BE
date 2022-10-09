@@ -19,6 +19,9 @@ func (usecase *reviewUsecase) PostReview(data review.ReviewCore) (row int, err e
 	if data.VenueID == 0 || data.Rate == 0 || data.Feedback == "" {
 		return 0, errors.New("data tidak boleh kosong")
 	}
+	if data.Rate > 5 {
+		data.Rate = 5
+	}
 	row, err = usecase.reviewData.InsertReview(data)
 	if err != nil {
 		return 0, err

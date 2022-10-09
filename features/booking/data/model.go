@@ -9,7 +9,8 @@ import (
 type Booking struct {
 	gorm.Model
 	UserID           uint `gorm:"foreignKey:UserID"`
-	FieldID          uint `gorm:"foreignKey:UserID"`
+	FieldID          uint `gorm:"foreignKey:FieldID"`
+	VenueID          uint `gorm:"foreignKey:VenueID"`
 	ScheduleDetailID uint
 	Total_price      uint
 	Payment_method   string
@@ -22,6 +23,16 @@ type Booking struct {
 	User             User           `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Field            Field          `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	ScheduleDetail   ScheduleDetail `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Venue            Venue          `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+type Schedule struct {
+	gorm.Model
+	FieldID         uint `gorm:"foreignkey:FieldID"`
+	Day             string
+	Start_hours     string
+	End_hours       string
+	Field           Field
+	ScheduleDetails []ScheduleDetail `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 type ScheduleDetail struct {
 	gorm.Model
@@ -68,16 +79,18 @@ type FotoVenue struct {
 }
 type Field struct {
 	gorm.Model
-	VenueID  uint `gorm:"foreignKey:VenueID"`
-	Category string
-	Price    uint
-	Venue    Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	VenueID   uint `gorm:"foreignKey:VenueID"`
+	Category  string
+	Price     uint
+	Venue     Venue      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Schedules []Schedule `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func fromCore(data booking.BookingCore) Booking {
 	return Booking{
 		UserID:           data.UserID,
 		FieldID:          data.FieldID,
+		VenueID:          data.VenueID,
 		ScheduleDetailID: data.ScheduleDetailID,
 		Total_price:      data.Total_price,
 		Payment_method:   data.Payment_method,
@@ -94,10 +107,14 @@ func (data *Booking) toCore() booking.BookingCore {
 		ID:               data.ID,
 		UserID:           data.UserID,
 		Name_User:        data.User.Name_User,
+		Email:            data.User.Email,
+		VenueID:          data.VenueID,
 		Nama_venue:       data.Field.Venue.Name_venue,
 		FieldID:          data.FieldID,
 		Category:         data.Field.Category,
 		ScheduleDetailID: data.ScheduleDetailID,
+		Start_hours:      data.ScheduleDetail.Start_hours,
+		End_Hours:        data.ScheduleDetail.End_hours,
 		Total_price:      data.Total_price,
 		Payment_method:   data.Payment_method,
 		OrderID:          data.OrderID,

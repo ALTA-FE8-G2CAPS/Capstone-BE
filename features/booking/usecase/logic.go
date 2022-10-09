@@ -24,8 +24,8 @@ func New(dataBooking booking.DataInterface, dataField field.DataInterface, dataS
 	}
 }
 
-func (usecase *BookingUsecase) GetAllBooking(user_id, field_id int) ([]booking.BookingCore, error) {
-	dataField, err := usecase.bookingData.SelectAllBooking(user_id, field_id)
+func (usecase *BookingUsecase) GetAllBooking(user_id, field_id, venue_id int) ([]booking.BookingCore, error) {
+	dataField, err := usecase.bookingData.SelectAllBooking(user_id, field_id, venue_id)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (usecase *BookingUsecase) GetAllBooking(user_id, field_id int) ([]booking.B
 
 func (usecase *BookingUsecase) PostData(data booking.BookingCore) (row int, err error) {
 	var newBooking booking.BookingCore
-	if data.FieldID == 0 || data.ScheduleDetailID == 0 {
+	if data.FieldID == 0 || data.ScheduleDetailID == 0 || data.VenueID == 0 {
 		return -1, errors.New("data tidak boleh kosong")
 	}
 
@@ -49,10 +49,14 @@ func (usecase *BookingUsecase) PostData(data booking.BookingCore) (row int, err 
 	}
 	newBooking.UserID = data.UserID
 	newBooking.Name_User = data.Name_User
+	newBooking.Email = data.Email
+	newBooking.VenueID = data.VenueID
 	newBooking.Nama_venue = dataField.Name_venue
 	newBooking.FieldID = data.FieldID
 	newBooking.Category = data.Category
 	newBooking.ScheduleDetailID = data.ScheduleDetailID
+	newBooking.Start_hours = data.Start_hours
+	newBooking.End_Hours = data.End_Hours
 	newBooking.Total_price = dataField.Price
 	newBooking.Payment_method = data.Payment_method
 	newBooking.TransactionID = data.TransactionID
@@ -82,6 +86,7 @@ func (usecase *BookingUsecase) AddPayment(data booking.BookingCore, booking_id i
 	if err != nil {
 		return -1, err
 	}
+	// helper.SendGmailNotif("muhammadadityogunawan@gmail.com", "lapangan volly", "gor bung karno", "50000", "1", "50000", "50000", "50000", "0")
 	return row, nil
 }
 

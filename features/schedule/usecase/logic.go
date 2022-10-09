@@ -71,3 +71,17 @@ func (usecase *scheduleUsecase) DeleteSchedule(schedule_id int) (row int, err er
 	}
 	return result, err
 }
+
+func (usecase *scheduleUsecase) PutData(data schedule.ScheduleCore, id int) (row int, err error) {
+	row, err = usecase.scheduleData.UpdateSchedule(data, id)
+
+	if err != nil {
+		return -1, err
+	}
+	deteilShceduleTime := helper.GenerateSchedule(id, data.Start_hours, data.End_hours)
+	row, err = usecase.scheduleData.InsertDetailSchedule(id, deteilShceduleTime)
+	if err != nil {
+		return -1, err
+	}
+	return row, nil
+}

@@ -10,6 +10,7 @@ import (
 type BookingRequest struct {
 	FieldID          uint   `json:"field_id" form:"field_id"`
 	UserID           uint   `json:"user_id" form:"user_id"`
+	VenueID          uint   `json:"venue_id" form:"venue_id"`
 	ScheduleDetailID uint   `json:"schedule_detail_id" form:"schedule_detail_id"`
 	Payment_method   string `json:"payment_method" form:"payment_method"`
 	OrderID          string `json:"order_id" form:"order_id"`
@@ -23,6 +24,7 @@ func ToCore(data BookingRequest) booking.BookingCore {
 	return booking.BookingCore{
 		FieldID:          data.FieldID,
 		UserID:           data.UserID,
+		VenueID:          data.VenueID,
 		ScheduleDetailID: data.ScheduleDetailID,
 		Payment_method:   data.Payment_method,
 		OrderID:          data.OrderID,
