@@ -7,21 +7,26 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 
+	// "go.starlark.net/lib/time"
 	"gopkg.in/gomail.v2"
 )
 
-func SendGmailNotif(email, user, field, venue string, cost, qty, amount, order_id, total, totalnotax, tax int) {
+func SendGmailNotif(email, user, field, invoice, venue string, cost, qty, amount, order_id, total, totalnotax, tax int) error {
+
 	template, _ := filepath.Abs("./utils/helper/templates/notif-email.html")
 	subject := "Payment Notification"
 	templateData := BodyEmail{
 		NAMA_USER: user,
 		FIELD:     field,
 		VENUE:     venue,
+		INVOICE:   invoice,
 		COST:      cost,
 		QTY:       qty,
 		ORDERID:   order_id,
 		AMOUNT:    Amount(cost, qty),
+		DATE:      time.Now().Format("2006-01-02"),
 		TOTAL:     total,
 	}
 	result, errParse := ParseTemplate(template, templateData)
@@ -29,6 +34,7 @@ func SendGmailNotif(email, user, field, venue string, cost, qty, amount, order_i
 
 	runtime.GOMAXPROCS(1)
 	go SendEmail(email, subject, result)
+	return nil
 }
 
 func SendEmail(to string, subject string, result string) error {
@@ -77,9 +83,11 @@ type BodyEmail struct {
 	NAMA_USER string
 	FIELD     string
 	VENUE     string
+	INVOICE   string
 	ORDERID   int
 	COST      int
 	QTY       int
 	AMOUNT    int
 	TOTAL     int
+	DATE      string
 }
