@@ -3,6 +3,7 @@ package review
 type ReviewCore struct {
 	ID          uint
 	Name_user   string
+	Foto_user   string
 	UserID      uint
 	Nama_venue  string
 	VenueID     uint

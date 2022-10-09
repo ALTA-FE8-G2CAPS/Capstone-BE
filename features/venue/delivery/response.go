@@ -11,6 +11,8 @@ type VenueResponse struct {
 	Name_user         string      `json:"name_user" form:"name_user"`
 	Latitude          float64     `json:"latitude" form:"latitude"`
 	Longitude         float64     `json:"longitude" form:"longitude"`
+	Max_price         uint        `json:"max_price"`
+	Min_price         uint        `json:"min_price"`
 	Foto_venue        []FotoVenue `json:"foto_venue"`
 }
 
@@ -18,6 +20,11 @@ type FotoVenue struct {
 	ID         uint   `json:"foto_venue_id"`
 	VenueID    uint   `json:"venue_id"`
 	Foto_Venue string `json:"foto_venue"`
+}
+
+type Field struct {
+	Min uint `json:"min_price"`
+	Max uint `json:"max_price"`
 }
 
 func FromCore(data venue.VenueCore) VenueResponse {
@@ -30,6 +37,8 @@ func FromCore(data venue.VenueCore) VenueResponse {
 		Name_user:         data.Name_user,
 		Latitude:          data.Latitude,
 		Longitude:         data.Longitude,
+		Max_price:         data.Max_price,
+		Min_price:         data.Min_price,
 		Foto_venue:        FromCoreFotoList(data.Foto_venue),
 	}
 

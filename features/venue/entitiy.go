@@ -10,6 +10,9 @@ type VenueCore struct {
 	Latitude          float64
 	Longitude         float64
 	Foto_venue        []FotoVenue
+	Max_price         uint
+	Min_price         uint
+	Price             []Field2
 }
 
 type FotoVenue struct {
@@ -17,7 +20,15 @@ type FotoVenue struct {
 	VenueID    uint
 	Foto_Venue string
 }
-
+type Field struct {
+	Min uint
+	Max uint
+}
+type Field2 struct {
+	VenueID  uint
+	Category string
+	Price    uint
+}
 type UsecaseInterface interface {
 	GetAllVenue(user_id int) (data []VenueCore, err error)
 	GetVenueById(id int) (data VenueCore, err error)

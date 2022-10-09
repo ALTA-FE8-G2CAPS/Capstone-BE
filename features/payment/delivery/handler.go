@@ -28,7 +28,7 @@ func New(usecase payment.UsecaseInterface) *paymentDelivery {
 var booking coreapi.Client
 
 func (delivery *paymentDelivery) PostPayment(c echo.Context) error {
-	midtrans.ServerKey = config.MidtransOrderServerKey()
+	midtrans.ServerKey = config.MidtransServerKey()
 	booking.New(midtrans.ServerKey, midtrans.Sandbox)
 	typeName := c.Param("type")
 	userId := middlewares.ExtractToken(c)

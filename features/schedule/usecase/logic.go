@@ -34,12 +34,13 @@ func (usecase *scheduleUsecase) PostData(dataSchedule schedule.ScheduleCore) (ro
 	return row, err
 }
 
-// func (usecase *scheduleUsecase) PutData(data schedule.ScheduleCore, schedule_id int) (row int, err error){
-// 	row, err = usecase.scheduleData.UpdateSchedule(data, schedule_id)
-// 	if err != nil {
-// 		return -1, err
-// 	}
-// }
+func (usecase *scheduleUsecase) PutScheduleDetail(data schedule.ScheduleDetailCore, id int) (row int, err error) {
+	row, err = usecase.scheduleData.UpdateScheduleDetail(data, id)
+	if err != nil {
+		return -1, err
+	}
+	return row, nil
+}
 
 func (usecase *scheduleUsecase) GetAllSchedule(field_id int) ([]schedule.ScheduleCore, error) {
 	dataMentee, err := usecase.scheduleData.SelectAllSchedule(field_id)
@@ -51,6 +52,14 @@ func (usecase *scheduleUsecase) GetScheduleById(id int) (schedule.ScheduleCore, 
 	result, err := usecase.scheduleData.SelectScheduleById(id)
 	if err != nil {
 		return schedule.ScheduleCore{}, err
+	}
+	return result, nil
+}
+
+func (usecase *scheduleUsecase) GetScheduleDetailById(id int) (schedule.ScheduleDetailCore, error) {
+	result, err := usecase.scheduleData.SelectScheduleDetailById(id)
+	if err != nil {
+		return schedule.ScheduleDetailCore{}, err
 	}
 	return result, nil
 }

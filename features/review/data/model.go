@@ -52,6 +52,7 @@ type User struct {
 	Password     string
 	Role         string `gorm:"default:user"`
 	Address_user string
+	Foto_user    string
 	Venues       []Venue  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Reviews      []Review `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
@@ -71,6 +72,7 @@ func (data *Review) toCore() review.ReviewCore {
 		ID:          data.ID,
 		UserID:      data.UserID,
 		Name_user:   data.User.Name_User,
+		Foto_user:   data.User.Foto_user,
 		VenueID:     data.VenueID,
 		Nama_venue:  data.Venue.Name_venue,
 		Rate:        data.Rate,
