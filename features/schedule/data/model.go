@@ -21,6 +21,7 @@ type ScheduleDetail struct {
 	Start_hours     string
 	End_hours       string
 	Status_schedule string `gorm:"default:Available"`
+	Schedule        Schedule
 }
 type Field struct {
 	gorm.Model
@@ -80,6 +81,7 @@ func fromCore(data schedule.ScheduleCore) Schedule {
 func (data *Schedule) toCore() schedule.ScheduleCore {
 	return schedule.ScheduleCore{
 		ID:             data.ID,
+		VenueID:        data.Field.VenueID,
 		FieldID:        data.FieldID,
 		Category:       data.Field.Category,
 		Day:            data.Day,
@@ -92,6 +94,7 @@ func (data *Schedule) toCore() schedule.ScheduleCore {
 func (data *ScheduleDetail) toCoreScheduleDetail() schedule.ScheduleDetailCore {
 	return schedule.ScheduleDetailCore{
 		ID:              data.ID,
+		VenueID:         data.Schedule.Field.VenueID,
 		ScheduleID:      data.ScheduleID,
 		Start_hours:     data.Start_hours,
 		End_hours:       data.End_hours,

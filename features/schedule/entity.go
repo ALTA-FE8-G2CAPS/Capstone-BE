@@ -3,6 +3,7 @@ package schedule
 type ScheduleCore struct {
 	ID             uint
 	FieldID        uint
+	VenueID        uint
 	Category       string
 	Day            string
 	Start_hours    string
@@ -13,6 +14,7 @@ type ScheduleCore struct {
 type ScheduleDetailCore struct {
 	ID              uint
 	ScheduleID      uint
+	VenueID         uint
 	Start_hours     string
 	End_hours       string
 	Status_schedule string
@@ -24,7 +26,7 @@ type UsecaseInterface interface {
 	GetScheduleDetailById(id int) (data ScheduleDetailCore, err error)
 	PostData(dataSchedule ScheduleCore) (row int, err error)
 	PutScheduleDetail(data ScheduleDetailCore, id int) (row int, err error)
-	// PutData(data ScheduleCore, schedule_id int) (row int, err error)
+	PutData(data ScheduleCore, schedule_id int) (row int, err error)
 	DeleteSchedule(schedule_id int) (row int, err error)
 }
 
@@ -35,6 +37,6 @@ type DataInterface interface {
 	InsertData(dataSchedule ScheduleCore) (shcedule_id, row int, err error)
 	InsertDetailSchedule(schedule_id int, dataGenerete []map[string]interface{}) (row int, err error)
 	UpdateScheduleDetail(data ScheduleDetailCore, id int) (row int, err error)
-	// UpdateSchedule(data ScheduleCore, schedule_id int) (shcedule_id, row int, err error)
+	UpdateSchedule(data ScheduleCore, schedule_id int) (row int, err error)
 	DeleteSchedule(schedule_id int) (row int, err error)
 }

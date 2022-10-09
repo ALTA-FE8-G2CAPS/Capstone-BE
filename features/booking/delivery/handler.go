@@ -53,11 +53,11 @@ func (delivery *bookingDelivery) PostData(c echo.Context) error {
 	row, err := delivery.bookingUsecase.PostData(ToCore(bookingDataRequest))
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail input data"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp(err.Error()))
 	}
 
 	if row != 1 {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail input data"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp(err.Error()))
 	}
 
 	return c.JSON(http.StatusOK, helper.Success_Resp("success input"))
@@ -68,14 +68,19 @@ func (delivery *bookingDelivery) GetBooking(c echo.Context) error {
 
 	field_id, err := strconv.Atoi(c.QueryParam("field_id"))
 	if err != nil && field_id != 0 {
-		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail converse class_id param"))
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp(err.Error()))
 	}
-	user_id, err := strconv.Atoi(c.QueryParam("user_id"))
+	user_id, errUser := strconv.Atoi(c.QueryParam("user_id"))
 	if err != nil && field_id != 0 {
-		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail converse class_id param"))
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp(errUser.Error()))
 	}
 
-	data, err := delivery.bookingUsecase.GetAllBooking(user_id, field_id)
+	venue_id, errVenue := strconv.Atoi(c.QueryParam("venue_id"))
+	if err != nil && venue_id != 0 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp(errVenue.Error()))
+	}
+
+	data, err := delivery.bookingUsecase.GetAllBooking(user_id, field_id, venue_id)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp(err.Error()))

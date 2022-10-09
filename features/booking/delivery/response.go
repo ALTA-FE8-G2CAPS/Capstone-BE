@@ -10,11 +10,15 @@ import (
 
 type BookingResponse struct {
 	ID               uint   `json:"booking_id"`
+	VenueID          uint   `json:"venue_id"`
 	Name_venue       string `json:"name_venue"`
 	Name_User        string `json:"name_user"`
+	Email            string `json:"email"`
 	Field_id         uint   `json:"field_id"`
 	Category         string `json:"category"`
 	ScheduleDetailID uint   `json:"schedule_detail_id"`
+	Start_hours      string `json:"start_hours"`
+	End_Hours        string `json:"end_hours"`
 	Total_price      uint   `json:"total_price"`
 	Payment_method   string `json:"payment_method"`
 	OrderID          string `json:"order_id"`
@@ -52,11 +56,15 @@ func FromMidtransToPayment(resMidtrans *coreapi.ChargeResponse) Payment {
 func FromCore(data booking.BookingCore) BookingResponse {
 	return BookingResponse{
 		ID:               data.ID,
+		VenueID:          data.VenueID,
 		Name_venue:       data.Nama_venue,
 		Name_User:        data.Name_User,
+		Email:            data.Email,
 		Field_id:         data.FieldID,
 		Category:         data.Category,
 		ScheduleDetailID: data.ScheduleDetailID,
+		Start_hours:      data.Start_hours,
+		End_Hours:        data.End_Hours,
 		Total_price:      data.Total_price,
 		Payment_method:   data.Payment_method,
 		OrderID:          data.OrderID,

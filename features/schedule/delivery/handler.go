@@ -131,23 +131,15 @@ func (delivery *scheduleDelivery) UpdateSchedule(c echo.Context) error {
 	if err_conv != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err_conv.Error())
 	}
-	rowDel, errDel := delivery.scheduleUsecase.DeleteSchedule(id_conv)
-	if errDel != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail delete data"))
-	}
-	if rowDel != 1 {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("rows affected 0, fail delete data"))
-	}
-
 	errBind := c.Bind(&scheduleRequestdata)
 	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail bind data"))
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp(errBind.Error()))
 	}
 
-	row, err := delivery.scheduleUsecase.PostData(ToCore(scheduleRequestdata))
+	row, err := delivery.scheduleUsecase.PutData(ToCore(scheduleRequestdata), id_conv)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp("fail input"))
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp(err.Error()))
 	}
 
 	if row == 0 {

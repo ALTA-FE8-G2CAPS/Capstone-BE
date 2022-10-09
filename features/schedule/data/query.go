@@ -85,13 +85,14 @@ func (repo *scheduleData) SelectScheduleDetailById(id int) (schedule.ScheduleDet
 	var dataSchedule ScheduleDetail
 	dataSchedule.ID = uint(id)
 
-	tx := repo.db.Where("id = ?", id).First(&dataSchedule)
+	tx := repo.db.Where("id = ?", id).Preload("Schedule.Field").First(&dataSchedule)
 
 	if tx.Error != nil {
 		return schedule.ScheduleDetailCore{}, tx.Error
 	}
 
 	dataScheduleCore := dataSchedule.toCoreScheduleDetail()
+
 	return dataScheduleCore, nil
 
 }
@@ -134,6 +135,14 @@ func (repo *scheduleData) UpdateScheduleDetail(data schedule.ScheduleDetailCore,
 	}
 
 	tx := repo.db.Save(&scheduleDetailUpdate)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
+
+func (repo *scheduleData) UpdateSchedule(data schedule.ScheduleCore, id int) (int, error) {
+	tx := repo.db.Model(&ScheduleDetail{}).Where("schedule_id = ?", id).Select("schedule_id").Update("schedule_id", -1)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}

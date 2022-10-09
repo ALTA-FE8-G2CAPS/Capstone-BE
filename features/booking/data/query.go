@@ -3,6 +3,7 @@ package data
 import (
 	"capstone-project/features/booking"
 	"errors"
+	"fmt"
 
 	"github.com/midtrans/midtrans-go/coreapi"
 	"gorm.io/gorm"
@@ -21,45 +22,63 @@ func New(db *gorm.DB) booking.DataInterface {
 
 func (repo *bookingData) InsertData(data booking.BookingCore) (int, error) {
 	newBooking := fromCore(data)
-	// fmt.Println(newBooking.UserID)
+	fmt.Println("isinya", newBooking.VenueID)
 	tx := repo.db.Create(&newBooking)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}
-
-	// token, errToken := middlewares.CreateToken(int(newUser.ID))
-	// if errToken != nil {
-	// 	return "", -1, errToken
-	// }
-
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *bookingData) SelectAllBooking(user_id, field_id int) ([]booking.BookingCore, error) {
+func (repo *bookingData) SelectAllBooking(user_id, field_id, venue_id int) ([]booking.BookingCore, error) {
 	var dataBooking []Booking
 
-	if user_id != 0 && field_id != 0 {
-		tx := repo.db.Where("user_id = ? AND field_id=?", user_id, field_id).Preload("User").Preload("Field.Venue").Find(&dataBooking)
+	if user_id != 0 && field_id != 0 && venue_id != 0 {
+		tx := repo.db.Where("user_id = ? AND field_id=? AND venue_id = ?", user_id, field_id, venue_id).Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
 		// fmt.Println(dataField[0].Venue.Name_venue)
 		if tx.Error != nil {
 			return []booking.BookingCore{}, tx.Error
 		}
+	} else if user_id != 0 && field_id != 0 {
+		tx := repo.db.Where("user_id = ? AND field_id=?", user_id, field_id).Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
 
+		if tx.Error != nil {
+			return []booking.BookingCore{}, tx.Error
+		}
+	} else if user_id != 0 && venue_id != 0 {
+		tx := repo.db.Where("user_id = ? AND venue_id=?", user_id, venue_id).Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
+
+		if tx.Error != nil {
+			return []booking.BookingCore{}, tx.Error
+		}
+	} else if field_id != 0 && venue_id != 0 {
+		tx := repo.db.Where("field_id = ? AND venue_id=?", field_id, venue_id).Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
+
+		if tx.Error != nil {
+			return []booking.BookingCore{}, tx.Error
+		}
+	} else if venue_id != 0 {
+		tx := repo.db.Where("venue_id = ?", venue_id).Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
+
+		if tx.Error != nil {
+			return []booking.BookingCore{}, tx.Error
+		}
 	} else if user_id != 0 {
-		tx := repo.db.Where("user_id = ?", user_id).Preload("User").Preload("Field.Venue").Find(&dataBooking)
-		// fmt.Println(dataField[0].Venue.Name_venue)
+		tx := repo.db.Where("user_id = ?", user_id).Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
+
 		if tx.Error != nil {
 			return []booking.BookingCore{}, tx.Error
 		}
 	} else if field_id != 0 {
-		tx := repo.db.Where("field_id = ?", field_id).Preload("User").Preload("Field.Venue").Find(&dataBooking)
+		tx := repo.db.Where("field_id = ?", field_id).Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
 		// fmt.Println(dataField[0].Venue.Name_venue)
 		if tx.Error != nil {
 			return []booking.BookingCore{}, tx.Error
 		}
 	} else {
-		// tx := repo.db.Joins("User").Joins("Field").Joins("inner join venues on venues.id = fields.venue_id").Find(&dataBooking)
-		tx := repo.db.Preload("User").Preload("Field.Venue").Find(&dataBooking)
+
+		tx := repo.db.Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
+		// fmt.Println("ini adalaj", dataBooking[0].ScheduleDetail)
 
 		if tx.Error != nil {
 			return []booking.BookingCore{}, tx.Error
