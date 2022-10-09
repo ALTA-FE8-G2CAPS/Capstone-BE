@@ -29,8 +29,8 @@ func New(e *echo.Echo, usecase booking.UsecaseInterface) {
 	e.POST("/bookings/addtocart", handler.PostData, middlewares.JWTMiddleware())
 	e.GET("/bookings", handler.GetBooking, middlewares.JWTMiddleware())
 	e.GET("/bookings/:id", handler.GetBookingId, middlewares.JWTMiddleware())
-	e.POST("/booking/:id/addpayment", handler.AddPayment, middlewares.JWTMiddleware())
-	e.DELETE("booking/:id", handler.DeleteBooking, middlewares.JWTMiddleware())
+	e.POST("/bookings/:id/addpayment", handler.AddPayment, middlewares.JWTMiddleware())
+	e.DELETE("bookings/:id", handler.DeleteBooking, middlewares.JWTMiddleware())
 	e.POST("callback", handler.PaymentWebHook)
 
 }
