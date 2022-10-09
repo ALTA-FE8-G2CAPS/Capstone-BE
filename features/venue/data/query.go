@@ -39,14 +39,14 @@ func (repo *venueData) SelectAllVenue(user_id int) ([]venue.VenueCore, error) {
 	var dataVenue []Venue
 
 	if user_id != 0 {
-		tx := repo.db.Where("user_id = ?", user_id).Preload("User").Preload("FotoVenues").Find(&dataVenue)
-		fmt.Println(dataVenue[0].FotoVenues)
+		tx := repo.db.Where("user_id = ?", user_id).Preload("User").Preload("FotoVenues").Preload("Fields").Find(&dataVenue)
 
 		if tx.Error != nil {
 			return []venue.VenueCore{}, tx.Error
 		}
 	} else {
-		tx := repo.db.Preload("User").Preload("FotoVenues").Find(&dataVenue)
+		tx := repo.db.Preload("User").Preload("FotoVenues").Preload("Fields").Find(&dataVenue)
+		// fmt.Println("field =", dataVenue[0].Fields[0].Price)
 
 		if tx.Error != nil {
 			return []venue.VenueCore{}, tx.Error
@@ -116,7 +116,7 @@ func (repo *venueData) UpdateVenue(data venue.VenueCore, user_id int) (int, erro
 
 func (repo *venueData) UploadPhoto(data venue.FotoVenue) (row int, err error) {
 	photo := fromCoreFoto(data)
-
+	fmt.Println(photo)
 	tx := repo.db.Create(&photo)
 	if tx.Error != nil {
 		return -1, tx.Error

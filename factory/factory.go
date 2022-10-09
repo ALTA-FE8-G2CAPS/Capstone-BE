@@ -42,13 +42,13 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 	fieldUsecaseFactory := fieldUsecase.New(fieldDataFactory)
 	fieldDelivery.New(e, fieldUsecaseFactory)
 
-	bookingDataFactory := bookingData.New(db)
-	bookingUsecaseFactory := bookingUsecase.New(bookingDataFactory, fieldDataFactory)
-	bookingDelivery.New(e, bookingUsecaseFactory)
-
 	scheduleDataFactory := scheduleData.New(db)
 	scheduleUsecaseFactory := scheduleUsecase.New(scheduleDataFactory)
 	scheduleDelivery.New(e, scheduleUsecaseFactory)
+
+	bookingDataFactory := bookingData.New(db)
+	bookingUsecaseFactory := bookingUsecase.New(bookingDataFactory, fieldDataFactory, scheduleDataFactory)
+	bookingDelivery.New(e, bookingUsecaseFactory)
 
 	reviewDataFactory := reviewData.New(db)
 	reviewUsecaseFactory := reviewUsecase.New(reviewDataFactory)

@@ -3,19 +3,24 @@ package usecase
 import (
 	"capstone-project/features/booking"
 	field "capstone-project/features/field"
+	schedule "capstone-project/features/schedule"
 
 	"errors"
+
+	"github.com/midtrans/midtrans-go/coreapi"
 )
 
 type BookingUsecase struct {
-	bookingData booking.DataInterface
-	fieldData   field.DataInterface
+	bookingData  booking.DataInterface
+	fieldData    field.DataInterface
+	scheduleData schedule.DataInterface
 }
 
-func New(dataBooking booking.DataInterface, dataField field.DataInterface) booking.UsecaseInterface {
+func New(dataBooking booking.DataInterface, dataField field.DataInterface, dataSchedule schedule.DataInterface) booking.UsecaseInterface {
 	return &BookingUsecase{
-		bookingData: dataBooking, // fieldData
-		fieldData:   dataField,
+		bookingData:  dataBooking, // fieldData
+		fieldData:    dataField,
+		scheduleData: dataSchedule,
 	}
 }
 
@@ -29,9 +34,14 @@ func (usecase *BookingUsecase) GetAllBooking(user_id, field_id int) ([]booking.B
 
 func (usecase *BookingUsecase) PostData(data booking.BookingCore) (row int, err error) {
 	var newBooking booking.BookingCore
-	if data.FieldID == 0 || data.Start_hours == 0 || data.End_hours == 0 {
+	if data.FieldID == 0 || data.ScheduleDetailID == 0 {
 		return -1, errors.New("data tidak boleh kosong")
 	}
+
+	// dataSchedule, _ := usecase.scheduleData.SelectScheduleDetailById(int(newBooking.ScheduleDetailID))
+	// if dataSchedule.Status_schedule != "Available" {
+	// 	return -1, errors.New("field already booked")
+	// }
 
 	dataField, errField := usecase.fieldData.SelectFieldById(int(data.FieldID))
 	if errField != nil {
@@ -42,9 +52,8 @@ func (usecase *BookingUsecase) PostData(data booking.BookingCore) (row int, err 
 	newBooking.Nama_venue = dataField.Name_venue
 	newBooking.FieldID = data.FieldID
 	newBooking.Category = data.Category
-	newBooking.Start_hours = data.Start_hours
-	newBooking.End_hours = data.End_hours
-	newBooking.Total_price = ((data.End_hours - data.Start_hours) * dataField.Price)
+	newBooking.ScheduleDetailID = data.ScheduleDetailID
+	newBooking.Total_price = dataField.Price
 	newBooking.Payment_method = data.Payment_method
 	newBooking.TransactionID = data.TransactionID
 	newBooking.Status_payment = data.Status_payment
@@ -66,4 +75,54 @@ func (usecase *BookingUsecase) GetBookingById(id int) (booking.BookingCore, erro
 		return booking.BookingCore{}, errors.New("data tidak ditemukan")
 	}
 	return result, nil
+}
+
+func (usecase *BookingUsecase) AddPayment(data booking.BookingCore, booking_id int) (int, error) {
+	row, err := usecase.bookingData.UpdatePayment(data, booking_id)
+	if err != nil {
+		return -1, err
+	}
+	return row, nil
+}
+
+func (usecase *BookingUsecase) DeleteBooking(booking_id int) (row int, err error) {
+	result, err := usecase.bookingData.DeleteBooking(booking_id)
+	if err != nil {
+		return -1, err
+	}
+	return result, err
+}
+
+func (usecase *BookingUsecase) CreatePaymentBankTransfer(field_id, user_id, schedule_detail_id int, reqPay coreapi.ChargeReq) (*coreapi.ChargeResponse, error) {
+	createPay, errCreatePay := usecase.bookingData.CreateDataPayment(reqPay)
+	if errCreatePay != nil {
+		return nil, errors.New("failed get response payment")
+	}
+
+	dataScheduleDetail, _ := usecase.scheduleData.SelectScheduleDetailById(schedule_detail_id)
+	dataScheduleDetail.Status_schedule = "booked"
+
+	usecase.scheduleData.UpdateScheduleDetail(dataScheduleDetail, schedule_detail_id)
+	return createPay, nil
+}
+
+func (usecase *BookingUsecase) PaymentWebHook(OrderID, status string) error {
+	var PaymentCore booking.BookingCore
+
+	PaymentCore.OrderID = OrderID
+	switch status {
+	case "settlement":
+		PaymentCore.Status_payment = "Paid"
+	case "pending":
+		PaymentCore.Status_payment = "Pending"
+	default:
+		PaymentCore.Status_payment = "Canceled"
+	}
+
+	_, err := usecase.bookingData.UpdatepaymentWebhook(PaymentCore)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

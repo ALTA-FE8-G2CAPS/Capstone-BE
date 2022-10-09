@@ -23,5 +23,5 @@ jobs:
             docker stop capstone-be
             docker rm capstone-be
             docker build -t capstone-be-images:latest .
-            docker run -d -p 80:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} -e AWS_REGION=${{ secrets.AWS_REGION }} -e S3_KEY=${{ secrets.S3_KEY }} -e S3_SECRET=${{ secrets.S3_SECRET }} -e AWS_BUCKET=${{ secrets.AWS_BUCKET }} --name capstone-be capstone-be-images:latest
+            docker run -d -p 80:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} -e AWS_REGION=${{ secrets.AWS_REGION }} -e S3_KEY=${{ secrets.S3_KEY }} -e S3_SECRET=${{ secrets.S3_SECRET }} -e AWS_BUCKET=${{ secrets.AWS_BUCKET }} -e MIDTRANS_EVENT_SERVER_KEY=${{secrets.MIDTRANS_EVENT_SERVER_KEY}} --name capstone-be capstone-be-images:latest
  

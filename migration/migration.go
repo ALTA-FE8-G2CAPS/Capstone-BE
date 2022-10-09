@@ -18,7 +18,6 @@ func InitMigrate(db *gorm.DB) {
 	db.AutoMigrate(&venueModel.FotoVenue{})
 	db.AutoMigrate(&fieldModel.Field{})
 	db.AutoMigrate(&bookingModel.Booking{})
-	db.AutoMigrate(&bookingModel.Booking{})
 	db.AutoMigrate(&scheduleModel.Schedule{})
 	db.AutoMigrate(&scheduleModel.ScheduleDetail{})
 	db.AutoMigrate(&reviewModel.Review{})

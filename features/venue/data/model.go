@@ -15,6 +15,7 @@ type Venue struct {
 	Latitude          float64
 	Longitude         float64
 	FotoVenues        []FotoVenue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Fields            []Field     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	User              User
 }
 
@@ -23,7 +24,13 @@ type FotoVenue struct {
 	VenueID    uint `gorm:"foreignKey:VenueID"`
 	Foto_venue string
 }
-
+type Field struct {
+	gorm.Model
+	VenueID  uint `gorm:"foreignKey:VenueID"`
+	Category string
+	Price    uint
+	Venue    Venue `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
 type User struct {
 	gorm.Model
 	Name_User    string
@@ -71,6 +78,7 @@ func (dataVenue *Venue) toCore() venue.VenueCore {
 		Latitude:          dataVenue.Latitude,
 		Longitude:         dataVenue.Longitude,
 		Foto_venue:        toCoreFotoList(dataVenue.FotoVenues),
+		Price:             toCoreFieldList(dataVenue.Fields),
 	}
 }
 
@@ -93,5 +101,19 @@ func toCoreFotoList(dataVenue []FotoVenue) []venue.FotoVenue {
 		foto_venue.Foto_Venue = dataVenue[key].Foto_venue
 		dataCore = append(dataCore, foto_venue)
 	}
+	return dataCore
+}
+
+func toCoreFieldList(dataVenue []Field) []venue.Field2 {
+	var dataCore []venue.Field2
+
+	for key := range dataVenue {
+		var field venue.Field2
+		field.VenueID = dataVenue[key].VenueID
+		field.Price = dataVenue[key].Price
+		field.Category = dataVenue[key].Category
+		dataCore = append(dataCore, field)
+	}
+	// fmt.Println(dataVenue)
 	return dataCore
 }

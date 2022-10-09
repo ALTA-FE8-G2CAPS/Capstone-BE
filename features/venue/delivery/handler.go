@@ -160,10 +160,6 @@ func (delivery *venueDelivery) PostPhoto(c echo.Context) error {
 
 	var data Foto_venueRequest
 	data.VenueID = uint(id_conv)
-	errBind := c.Bind(&data)
-	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to upload photo"))
-	}
 
 	dataFoto, infoFoto, fotoerr := c.Request().FormFile("foto_venue")
 	if fotoerr != http.ErrMissingFile || fotoerr == nil {
@@ -186,6 +182,10 @@ func (delivery *venueDelivery) PostPhoto(c echo.Context) error {
 		}
 
 		data.Foto_venue = imageaddress
+	}
+	errBind := c.Bind(&data)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp("fail to upload photo"))
 	}
 	row, err := delivery.venueUsecase.PostPhoto(ToCoreFoto_venue(data))
 	if err != nil {

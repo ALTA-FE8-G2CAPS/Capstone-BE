@@ -11,10 +11,10 @@ type ScheduleResponse struct {
 	Day            string           `json:"day"`
 	Start_hours    string           `json:"start_hours"`
 	End_hours      string           `json:"end_hours"`
-	ScheduleDetail []ScheduleDetail `json:"scheduledetail"`
+	ScheduleDetail []ScheduleDetail `json:"schedule_detail"`
 }
 type ScheduleDetail struct {
-	ID              uint   `json:"scheduledetail_id"`
+	ID              uint   `json:"schedule_detail_id"`
 	ScheduleID      uint   `json:"schedule_id"`
 	Start_hours     string `json:"start_hours"`
 	End_hours       string `json:"end_hours"`
@@ -30,6 +30,16 @@ func FromCore(data schedule.ScheduleCore) ScheduleResponse {
 		Start_hours:    data.Start_hours,
 		End_hours:      data.End_hours,
 		ScheduleDetail: FromCoreScheduleDetailList(data.ScheduleDetail),
+	}
+
+}
+func FromCoreScheduleDetail(data schedule.ScheduleDetailCore) ScheduleDetail {
+	return ScheduleDetail{
+		ID:              data.ID,
+		ScheduleID:      data.ScheduleID,
+		Start_hours:     data.Start_hours,
+		End_hours:       data.End_hours,
+		Status_schedule: data.Status_schedule,
 	}
 
 }

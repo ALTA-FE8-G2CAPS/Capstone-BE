@@ -3,6 +3,7 @@ package usecase
 import (
 	"capstone-project/features/venue"
 	"errors"
+	"math"
 )
 
 type venueUsecase struct {
@@ -28,6 +29,26 @@ func (usecase *venueUsecase) PostData(data venue.VenueCore) (row int, err error)
 
 func (usecase *venueUsecase) GetAllVenue(user_id int) ([]venue.VenueCore, error) {
 	dataMentee, err := usecase.venueData.SelectAllVenue(user_id)
+
+	for index, mentee := range dataMentee {
+		max := -1
+		min := math.MaxInt64
+		for _, price := range mentee.Price {
+			if int(price.Price) >= max {
+				max = int(price.Price)
+			}
+			if int(price.Price) <= min {
+				min = int(price.Price)
+			}
+		}
+		if len(mentee.Price) > 0 {
+			dataMentee[index].Max_price = uint(max)
+			dataMentee[index].Min_price = uint(min)
+		}
+
+	}
+
+	// fmt.Println(dataMentee[0].Max_price)
 	return dataMentee, err
 
 }

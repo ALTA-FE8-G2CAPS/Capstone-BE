@@ -5,6 +5,7 @@ import "capstone-project/features/review"
 type ReviewResponse struct {
 	ID          uint   `json:"id"`
 	Name_user   string `json:"name_user"`
+	Foto_user   string `json:"foto_user"`
 	VenueID     uint   `json:"venue_id"`
 	Nama_venue  string `json:"nama_venue"`
 	UserID      uint   `json:"user_id"`
@@ -17,6 +18,7 @@ func FromCore(data review.ReviewCore) ReviewResponse {
 	return ReviewResponse{
 		ID:          data.ID,
 		Name_user:   data.Name_user,
+		Foto_user:   data.Foto_user,
 		VenueID:     data.VenueID,
 		Nama_venue:  data.Nama_venue,
 		UserID:      data.UserID,

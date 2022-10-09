@@ -10,17 +10,25 @@ type Booking struct {
 	gorm.Model
 	UserID           uint `gorm:"foreignKey:UserID"`
 	FieldID          uint `gorm:"foreignKey:UserID"`
-	Start_hours      uint
-	End_hours        uint
+	ScheduleDetailID uint
 	Total_price      uint
 	Payment_method   string
-	OrderID          uint
-	TransactionID    uint
+	OrderID          string
+	TransactionID    string
 	Status_payment   string `gorm:"default:pending"`
 	Virtual_account  string
 	Transaction_time string
-	User             User  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Field            Field `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Transaction_exp  string
+	User             User           `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Field            Field          `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	ScheduleDetail   ScheduleDetail `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+type ScheduleDetail struct {
+	gorm.Model
+	ScheduleID      uint
+	Start_hours     string
+	End_hours       string
+	Status_schedule string `gorm:"default:Available"`
 }
 type User struct {
 	gorm.Model
@@ -70,14 +78,14 @@ func fromCore(data booking.BookingCore) Booking {
 	return Booking{
 		UserID:           data.UserID,
 		FieldID:          data.FieldID,
-		Start_hours:      data.Start_hours,
-		End_hours:        data.End_hours,
+		ScheduleDetailID: data.ScheduleDetailID,
 		Total_price:      data.Total_price,
 		Payment_method:   data.Payment_method,
 		TransactionID:    data.TransactionID,
 		Status_payment:   data.Status_payment,
 		Virtual_account:  data.Virtual_account,
 		Transaction_time: data.Transaction_time,
+		Transaction_exp:  data.Transaction_exp,
 	}
 }
 
@@ -89,8 +97,7 @@ func (data *Booking) toCore() booking.BookingCore {
 		Nama_venue:       data.Field.Venue.Name_venue,
 		FieldID:          data.FieldID,
 		Category:         data.Field.Category,
-		Start_hours:      data.Start_hours,
-		End_hours:        data.End_hours,
+		ScheduleDetailID: data.ScheduleDetailID,
 		Total_price:      data.Total_price,
 		Payment_method:   data.Payment_method,
 		OrderID:          data.OrderID,
@@ -98,6 +105,7 @@ func (data *Booking) toCore() booking.BookingCore {
 		Status_payment:   data.Status_payment,
 		Virtual_account:  data.Virtual_account,
 		Transaction_time: data.Transaction_time,
+		Transaction_exp:  data.Transaction_exp,
 	}
 }
 

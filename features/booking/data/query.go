@@ -2,7 +2,9 @@ package data
 
 import (
 	"capstone-project/features/booking"
+	"errors"
 
+	"github.com/midtrans/midtrans-go/coreapi"
 	"gorm.io/gorm"
 )
 
@@ -80,4 +82,78 @@ func (repo *bookingData) SelectBookingById(id int) (booking.BookingCore, error) 
 	bookingDataCore := bookingData.toCore()
 	return bookingDataCore, nil
 
+}
+
+func (repo *bookingData) DeleteBooking(booking_id int) (int, error) {
+	var dataBooking Booking
+
+	tx := repo.db.Where("id = ?", booking_id).Unscoped().Delete(&dataBooking)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return 0, errors.New("delete failed, rows affected 0")
+	}
+	return int(tx.RowsAffected), nil
+}
+
+func (repo *bookingData) UpdatePayment(data booking.BookingCore, booking_id int) (int, error) {
+	var bookingUpdate Booking
+	txDataOld := repo.db.First(&bookingUpdate, data.ID)
+
+	if txDataOld.Error != nil {
+		return -1, txDataOld.Error
+	}
+
+	if data.FieldID != 0 {
+		bookingUpdate.FieldID = data.FieldID
+	}
+
+	if data.UserID != 0 {
+		bookingUpdate.UserID = data.UserID
+	}
+
+	if data.ScheduleDetailID != 0 {
+		bookingUpdate.ScheduleDetailID = data.ScheduleDetailID
+	}
+
+	if data.Payment_method != "" {
+		bookingUpdate.Payment_method = data.Payment_method
+	}
+	if data.OrderID != "" {
+		bookingUpdate.OrderID = data.OrderID
+	}
+	if data.TransactionID != "" {
+		bookingUpdate.TransactionID = data.TransactionID
+	}
+	if data.Virtual_account != "" {
+		bookingUpdate.Virtual_account = data.Virtual_account
+	}
+	if data.Transaction_time != "" {
+		bookingUpdate.Transaction_time = data.Transaction_time
+	}
+	if data.Transaction_time != "" {
+		bookingUpdate.Transaction_exp = data.Transaction_exp
+	}
+	tx := repo.db.Save(&bookingUpdate)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
+
+func (repo *bookingData) CreateDataPayment(reqPay coreapi.ChargeReq) (*coreapi.ChargeResponse, error) {
+	payment, errPayment := coreapi.ChargeTransaction(&reqPay)
+	if errPayment != nil {
+		return nil, errPayment.RawError
+	}
+	return payment, nil
+}
+
+func (repo *bookingData) UpdatepaymentWebhook(data booking.BookingCore) (int, error) {
+	tx := repo.db.Model(&Booking{}).Where("order_id = ?", data.OrderID).Select("status_payment").Update("status_payment", data.Status_payment)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return 0, nil
 }

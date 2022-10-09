@@ -1,21 +1,52 @@
 package delivery
 
 import (
+	"capstone-project/config"
 	"capstone-project/features/booking"
+	"time"
+
+	"github.com/midtrans/midtrans-go/coreapi"
 )
 
 type BookingResponse struct {
 	ID               uint   `json:"booking_id"`
 	Name_venue       string `json:"name_venue"`
 	Name_User        string `json:"name_user"`
-	field_id         uint   `json:"field_id"`
+	Field_id         uint   `json:"field_id"`
 	Category         string `json:"category"`
-	Start_hours      uint   `json:"start_hours"`
-	End_hours        uint   `json:"end_hours"`
+	ScheduleDetailID uint   `json:"schedule_detail_id"`
 	Total_price      uint   `json:"total_price"`
-	OrderID          uint   `json:"order_id"`
+	Payment_method   string `json:"payment_method"`
+	OrderID          string `json:"order_id"`
 	Status_payment   string `json:"status_payment"`
 	Transaction_time string `json:"transaction_time"`
+	TransactionID    string `json:"transaction_id" form:"transaction_id"`
+	Transaction_exp  string `json:"transaction_exp"`
+	Virtual_account  string `json:"virtual_account" form:"virtual_account"`
+}
+
+type Payment struct {
+	OrderID           string    `json:"orderID" form:"orderID"`
+	TransactionID     string    `json:"transactionID" form:"transactionID"`
+	PaymentMethod     string    `json:"paymentMethod" form:"paymentMethod"`
+	BillNumber        string    `json:"billNumber" form:"billNumber"`
+	Bank              string    `json:"bank" form:"bank"`
+	GrossAmount       string    `json:"grossAmount" form:"grossAmount"`
+	TransactionTime   time.Time `json:"transactionTime" form:"transactionTime"`
+	TransactionExpire time.Time `json:"transactionExpired" form:"transactionExpired"`
+	TransactionStatus string    `json:"transactionStatus" form:"transactionStatus"`
+}
+
+func FromMidtransToPayment(resMidtrans *coreapi.ChargeResponse) Payment {
+	return Payment{
+		OrderID:           resMidtrans.OrderID,
+		TransactionID:     resMidtrans.TransactionID,
+		PaymentMethod:     config.PaymentBankTransferBCA,
+		BillNumber:        resMidtrans.VaNumbers[0].VANumber,
+		Bank:              resMidtrans.VaNumbers[0].Bank,
+		GrossAmount:       resMidtrans.GrossAmount,
+		TransactionStatus: resMidtrans.TransactionStatus,
+	}
 }
 
 func FromCore(data booking.BookingCore) BookingResponse {
@@ -23,13 +54,17 @@ func FromCore(data booking.BookingCore) BookingResponse {
 		ID:               data.ID,
 		Name_venue:       data.Nama_venue,
 		Name_User:        data.Name_User,
-		field_id:         data.FieldID,
+		Field_id:         data.FieldID,
 		Category:         data.Category,
-		Start_hours:      data.Start_hours,
-		End_hours:        data.End_hours,
+		ScheduleDetailID: data.ScheduleDetailID,
 		Total_price:      data.Total_price,
+		Payment_method:   data.Payment_method,
+		OrderID:          data.OrderID,
 		Status_payment:   data.Status_payment,
 		Transaction_time: data.Transaction_time,
+		Transaction_exp:  data.Transaction_exp,
+		TransactionID:    data.TransactionID,
+		Virtual_account:  data.Virtual_account,
 	}
 
 }
