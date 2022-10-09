@@ -115,6 +115,7 @@ func (data *Booking) toCore() booking.BookingCore {
 		ScheduleDetailID: data.ScheduleDetailID,
 		Start_hours:      data.ScheduleDetail.Start_hours,
 		End_Hours:        data.ScheduleDetail.End_hours,
+		Price:            data.Field.Price,
 		Total_price:      data.Total_price,
 		Payment_method:   data.Payment_method,
 		OrderID:          data.OrderID,

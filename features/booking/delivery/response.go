@@ -19,6 +19,7 @@ type BookingResponse struct {
 	ScheduleDetailID uint   `json:"schedule_detail_id"`
 	Start_hours      string `json:"start_hours"`
 	End_Hours        string `json:"end_hours"`
+	Price            uint   `json:"price"`
 	Total_price      uint   `json:"total_price"`
 	Payment_method   string `json:"payment_method"`
 	OrderID          string `json:"order_id"`
@@ -65,6 +66,7 @@ func FromCore(data booking.BookingCore) BookingResponse {
 		ScheduleDetailID: data.ScheduleDetailID,
 		Start_hours:      data.Start_hours,
 		End_Hours:        data.End_Hours,
+		Price:            data.Price,
 		Total_price:      data.Total_price,
 		Payment_method:   data.Payment_method,
 		OrderID:          data.OrderID,

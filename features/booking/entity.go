@@ -16,6 +16,7 @@ type BookingCore struct {
 	ScheduleDetailID uint
 	Start_hours      string
 	End_Hours        string
+	Price            uint
 	Total_price      uint
 	Payment_method   string
 	OrderID          string
