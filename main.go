@@ -59,7 +59,6 @@ func main() {
 			}
 		},
 	)
-	s.StartAsync()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
