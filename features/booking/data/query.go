@@ -80,7 +80,7 @@ func (repo *bookingData) SelectAllBooking(user_id, field_id, venue_id int) ([]bo
 		}
 	} else {
 
-		tx := repo.db.Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
+		tx := repo.db.Model(&Booking{}).Order("id DESC").Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
 		// fmt.Println("ini adalaj", dataBooking[0].ScheduleDetail)
 
 		if tx.Error != nil {
@@ -114,7 +114,7 @@ func (repo *bookingData) History(user_id, field_id int) ([]booking.BookingCore, 
 		}
 	} else {
 
-		tx := repo.db.Model(&Booking{}).Where("payment_method is not null").Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
+		tx := repo.db.Model(&Booking{}).Where("payment_method IS NOT NULL").Preload("User").Preload("Field.Venue").Preload("ScheduleDetail").Find(&dataBooking)
 		// fmt.Println("ini adalaj", dataBooking[0].ScheduleDetail)
 
 		if tx.Error != nil {
