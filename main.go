@@ -66,6 +66,7 @@ func main() {
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
 	}))
 
+	e.Use(middleware.Recover())
 	migration.InitMigrate(db)
 	factory.InitFactory(e, db)
 
