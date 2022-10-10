@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"sync"
+
+	"github.com/joho/godotenv"
 )
 
 type AppConfig struct {
@@ -34,9 +36,9 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defConfig AppConfig
-	// if err := godotenv.Load(".env"); err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal(err)
+	}
 
 	defConfig.DB_USERNAME = os.Getenv("DB_USERNAME")
 	defConfig.DB_PASSWORD = os.Getenv("DB_PASSWORD")

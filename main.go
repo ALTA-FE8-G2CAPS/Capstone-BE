@@ -28,12 +28,13 @@ func main() {
 		func() {
 			// Select
 			var dataSchedule []modelSchedule.ScheduleDetail
-			tx_select := db.Where("status_schedule = booked").Find(&dataSchedule)
+			tx_select := db.Where("status_schedule = ?", "booked").Find(&dataSchedule)
 
 			if tx_select.Error != nil {
-				fmt.Println("gagal mencari schedule booked")
+				fmt.Println(tx_select.Error)
 			} else {
-				fmt.Println("berjasil mencari schedule booked")
+				fmt.Println("berhasil mencari schedule booked")
+				fmt.Println(dataSchedule)
 			}
 
 			// Update status
