@@ -161,7 +161,7 @@ func (delivery *bookingDelivery) AddPayment(c echo.Context) error {
 	date := currentTime.Format("2006-01-02")
 	timer := currentTime.Format("15:04:05")
 
-	orderIDPay := fmt.Sprintf("Order-%s-%s-%s-%s", dataBooking.Name_User, dataBooking.Nama_venue, date, timer)
+	orderIDPay := fmt.Sprintf("Order-%s-%d-%s-%s", dataBooking.Name_User, dataBooking.VenueID, date, timer)
 	dataCore.OrderID = orderIDPay
 
 	inputPay := ToCoreMidtrans(dataCore)
