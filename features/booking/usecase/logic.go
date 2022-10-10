@@ -32,6 +32,13 @@ func (usecase *BookingUsecase) GetAllBooking(user_id, field_id, venue_id int) ([
 	}
 	return dataField, nil
 }
+func (usecase *BookingUsecase) History(user_id, field_id int) ([]booking.BookingCore, error) {
+	dataField, err := usecase.bookingData.History(user_id, field_id)
+	if err != nil {
+		return nil, err
+	}
+	return dataField, nil
+}
 
 func (usecase *BookingUsecase) PostData(data booking.BookingCore) (row int, err error) {
 	var newBooking booking.BookingCore

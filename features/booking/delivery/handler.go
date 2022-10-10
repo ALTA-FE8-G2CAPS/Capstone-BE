@@ -32,6 +32,7 @@ func New(e *echo.Echo, usecase booking.UsecaseInterface) {
 	e.POST("/bookings/:id/addpayment", handler.AddPayment, middlewares.JWTMiddleware())
 	e.DELETE("bookings/:id", handler.DeleteBooking, middlewares.JWTMiddleware())
 	e.POST("callback", handler.PaymentWebHook)
+	e.GET("/history", handler.History, middlewares.JWTMiddleware())
 
 }
 
@@ -81,6 +82,26 @@ func (delivery *bookingDelivery) GetBooking(c echo.Context) error {
 	}
 
 	data, err := delivery.bookingUsecase.GetAllBooking(user_id, field_id, venue_id)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helper.Success_DataResp("get all data success", FromCoreList(data)))
+}
+
+func (delivery *bookingDelivery) History(c echo.Context) error {
+
+	field_id, err := strconv.Atoi(c.QueryParam("field_id"))
+	if err != nil && field_id != 0 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp(err.Error()))
+	}
+	user_id, errUser := strconv.Atoi(c.QueryParam("user_id"))
+	if err != nil && field_id != 0 {
+		return c.JSON(http.StatusBadRequest, helper.Fail_Resp(errUser.Error()))
+	}
+
+	data, err := delivery.bookingUsecase.History(user_id, field_id)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.Fail_Resp(err.Error()))
@@ -169,7 +190,7 @@ func (delivery *bookingDelivery) AddPayment(c echo.Context) error {
 	detailPay, errPay := delivery.bookingUsecase.CreatePaymentBankTransfer(int(dataCore.FieldID), int(dataCore.UserID), int(dataBooking.ScheduleDetailID), inputPay)
 
 	if errPay != nil {
-		return c.JSON(500, helper.Fail_Resp("error insert data to midtrans"))
+		return c.JSON(500, helper.Fail_Resp(errPay.Error()))
 	}
 
 	result := FromMidtransToPayment(detailPay)
