@@ -111,7 +111,7 @@ func (usecase *BookingUsecase) DeleteBooking(booking_id int) (row int, err error
 func (usecase *BookingUsecase) CreatePaymentBankTransfer(field_id, user_id, schedule_detail_id int, reqPay coreapi.ChargeReq) (*coreapi.ChargeResponse, error) {
 	createPay, errCreatePay := usecase.bookingData.CreateDataPayment(reqPay)
 	if errCreatePay != nil {
-		return nil, errors.New("failed get response payment")
+		return nil, errors.New(errCreatePay.Error())
 	}
 
 	dataScheduleDetail, _ := usecase.scheduleData.SelectScheduleDetailById(schedule_detail_id)
